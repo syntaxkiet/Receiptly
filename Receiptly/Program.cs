@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Shared.Interface;
+using Shared.Service;
 
 namespace Receiptly
 {
@@ -12,7 +14,7 @@ namespace Receiptly
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddScoped<I>
+            builder.Services.AddScoped<IOCRService, TesseractService>();
 
             await builder.Build().RunAsync();
         }
