@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiptly", "Receiptly.csproj", "{F093BF9D-3411-4C0A-9DA6-F9AA8B7ADC91}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "..\Shared\Shared.csproj", "{9D0C66E4-9723-43F6-A3AC-0C8638EB74A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F093BF9D-3411-4C0A-9DA6-F9AA8B7ADC91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F093BF9D-3411-4C0A-9DA6-F9AA8B7ADC91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F093BF9D-3411-4C0A-9DA6-F9AA8B7ADC91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D0C66E4-9723-43F6-A3AC-0C8638EB74A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D0C66E4-9723-43F6-A3AC-0C8638EB74A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D0C66E4-9723-43F6-A3AC-0C8638EB74A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D0C66E4-9723-43F6-A3AC-0C8638EB74A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
