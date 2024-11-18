@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Shared.Interface
 {
-    internal interface IOCRService
+    public interface IOCRService
     {
+        public Task ExtractReceiptData(Stream fileStream, string fileName);
     }
 }
