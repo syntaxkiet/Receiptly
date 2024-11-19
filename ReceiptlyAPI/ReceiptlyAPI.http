@@ -1,0 +1,6 @@
+@ReceiptlyAPI_HostAddress = http://localhost:5237
+
+GET {{ReceiptlyAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
