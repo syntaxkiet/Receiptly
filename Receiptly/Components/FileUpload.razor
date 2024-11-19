@@ -1,7 +1,7 @@
 ﻿<h3>@ComponentTitle</h3>
 
-<InputFile type="file" @onchange="HandleFileSelected" />
-<button disabled="@ProcessFileIsDisabled" @onclick="HandleButtonClick">@ButtonTitle</button>
+<InputFile OnChange="HandleFileSelected" />
+<button disabled= "@ProcessFileIsDisabled" @onclick="HandleButtonClick">@ButtonTitle</button>
 
 @code {
     [Parameter]
@@ -13,7 +13,7 @@
     private bool ProcessFileIsDisabled = true;
     private IBrowserFile? selectedFile;
 
-    private void HandleFileSelected(ChangeEventArgs e)
+    private void HandleFileSelected(InputFileChangeEventArgs e)
     {
         ProcessFileIsDisabled = false;
     }
