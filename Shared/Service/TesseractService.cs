@@ -16,7 +16,7 @@ namespace Shared.Service
 {
     public class TesseractService : IOCRService
     {
-    public async Task ExtractReceiptData(Stream fileStream, string fileName)
+    public async Task ExtractReceiptDataAsync(Stream fileStream, string fileName)
     {
         // Ensure the 'Sample' directory exists
         string sampleDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sample");
