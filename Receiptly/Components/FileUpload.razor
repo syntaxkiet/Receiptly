@@ -1,0 +1,29 @@
+﻿<h3>@ComponentTitle</h3>
+
+<InputFile OnChange="HandleFileSelected" />
+<button disabled= "@ProcessFileIsDisabled" @onclick="HandleButtonClick">@ButtonTitle</button>
+
+@code {
+    [Parameter]
+    public EventCallback<IBrowserFile> OnFileUploaded { get; set; }
+    [Parameter]
+    public string ComponentTitle { get; set; } = "File Upload";
+    [Parameter]
+    public string ButtonTitle { get; set; } = "Process File";
+    private bool ProcessFileIsDisabled = true;
+    private IBrowserFile? selectedFile;
+
+    private void HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+        ProcessFileIsDisabled = false;
+    }
+
+    private async Task HandleButtonClick()
+    {
+        if (selectedFile is not null)
+        {
+            await OnFileUploaded.InvokeAsync(selectedFile);
+        }
+    }
+}
