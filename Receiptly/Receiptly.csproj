@@ -21,7 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <_ContentIncludedByDefault Remove="Receiptly.Models\obj\project.assets.json" />
+    <_ContentIncludedByDefault Remove="Receiptly.Models\obj\project.packagespec.json" />
+    <_ContentIncludedByDefault Remove="Receiptly.Models\obj\Receiptly.Models.csproj.nuget.dgspec.json" />
   </ItemGroup>
 
 </Project>
