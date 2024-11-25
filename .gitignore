@@ -10,6 +10,19 @@
 *.userosscache
 *.sln.docstates
 
+
+# JetBrains Rider-specific files
+.idea/
+*.iml
+.idea_modules/
+.idea/*workspace.xml
+.idea/*tasks.xml
+.idea/usage.statistics.xml
+.idea/*.iws
+.idea/dictionaries
+.idea/shelf
+
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
