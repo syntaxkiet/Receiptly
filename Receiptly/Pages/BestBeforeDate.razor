@@ -51,7 +51,8 @@ else
     protected override void OnInitialized()
     {
         // Get receipt based on Id
-        receipt = MockData.GetMockReceipt().FirstOrDefault(r => r.Id == Id);
+        receipt = MockData.receiptList.FirstOrDefault(r => r.Id == Id);
+        
     }
 
     private void SaveBestBeforeDate()

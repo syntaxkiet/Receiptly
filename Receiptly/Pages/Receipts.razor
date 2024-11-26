@@ -3,35 +3,37 @@
 @inject NavigationManager Navigation
 <h3>Alla kvitton</h3>
 
-@if (receipts == null)
+@if (receiptList == null )
 {
-    <p>Laddar kvitton...</p> 
-    
+    <p>Laddar kvitton...</p>
 }
 else
 {
     <ul>
-        @foreach (var receipt in receipts)
+        @foreach (var receipt in receiptList)
         {
             <li>
-                <a @onclick="(() => OpenReceipt(receipt.Id))">@receipt.StoreName - @receipt.PurchaseDate.ToShortDateString()</a>
+                <a @onclick="(() => OpenReceipt(receipt.Id))">
+                    @receipt.StoreName - @receipt.PurchaseDate.ToShortDateString()
+                </a>
             </li>
         }
     </ul>
 }
 
 @code {
-    private List<Receipt>? receipts;
+    private List<Receipt> receiptList { get; set; }
 
     protected override void OnInitialized()
     {
-        // Get receipt from MockData
-        receipts = MockData.GetMockReceipt();
+        // Get the Mockdata
+       receiptList = MockData.receiptList; 
+       
     }
 
     private void OpenReceipt(int id)
     {
-        // Navigete to receipt detailes
+        // Navigate to ReceiptDetails 
         Navigation.NavigateTo($"/receipt/{id}");
     }
 }
