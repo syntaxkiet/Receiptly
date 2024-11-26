@@ -1,5 +1,6 @@
 @page "/receipt/{id:int}"
 @inject NavigationManager Navigation
+@inject IReceiptService ReceiptService
 @using Shared.Receiptly.Models
 <h3>Kvittodetaljer</h3>
 
@@ -51,8 +52,8 @@ else
     protected override void OnInitialized()
     {
         // Get receipt based on Id
-        receipt = MockData.receiptList.FirstOrDefault(r => r.Id == Id);
-        
+        receipt = ReceiptService.GetReceiptById(Id);
+
     }
 
     private void SaveBestBeforeDate()

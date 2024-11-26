@@ -1,5 +1,6 @@
 @page "/Receipts"
 @using Shared.Receiptly.Models
+@inject IReceiptService ReceiptService
 @inject NavigationManager Navigation
 <h3>Alla kvitton</h3>
 
@@ -27,8 +28,8 @@ else
     protected override void OnInitialized()
     {
         // Get the Mockdata
-       receiptList = MockData.receiptList; 
-       
+        receiptList = ReceiptService.GetAllReceipts();
+
     }
 
     private void OpenReceipt(int id)
