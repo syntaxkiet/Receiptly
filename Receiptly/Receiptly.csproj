@@ -20,10 +20,6 @@
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Receiptly.Models\obj\project.assets.json" />
-    <_ContentIncludedByDefault Remove="Receiptly.Models\obj\project.packagespec.json" />
-    <_ContentIncludedByDefault Remove="Receiptly.Models\obj\Receiptly.Models.csproj.nuget.dgspec.json" />
-  </ItemGroup>
+ 
 
 </Project>

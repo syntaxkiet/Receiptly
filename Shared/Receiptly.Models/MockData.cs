@@ -2,10 +2,11 @@ namespace Shared.Receiptly.Models;
 
 public class MockData
 {
-    public static Receipt GetMockReceipt()
+    public static List<Receipt> GetMockReceipt()
     {
-        return new Receipt
+        return new List<Receipt>
         {
+            new Receipt{
             Id = 1,
             StoreName = "Hemköp Gallerian",
             PurchaseDate = new DateTime(2024, 10, 25, 15, 47, 55),
@@ -46,8 +47,10 @@ public class MockData
                     Quantity = 12,
                     
                 }
+                }
             }
 
         };
+            
     }
 }

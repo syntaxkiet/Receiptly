@@ -1,0 +1,37 @@
+@page "/Receipts"
+@using Shared.Receiptly.Models
+@inject NavigationManager Navigation
+<h3>Alla kvitton</h3>
+
+@if (receipts == null)
+{
+    <p>Laddar kvitton...</p> 
+    
+}
+else
+{
+    <ul>
+        @foreach (var receipt in receipts)
+        {
+            <li>
+                <a @onclick="(() => OpenReceipt(receipt.Id))">@receipt.StoreName - @receipt.PurchaseDate.ToShortDateString()</a>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Receipt>? receipts;
+
+    protected override void OnInitialized()
+    {
+        // Get receipt from MockData
+        receipts = MockData.GetMockReceipt();
+    }
+
+    private void OpenReceipt(int id)
+    {
+        // Navigete to receipt detailes
+        Navigation.NavigateTo($"/receipt/{id}");
+    }
+}
