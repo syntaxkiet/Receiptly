@@ -10,6 +10,12 @@
 *.userosscache
 *.sln.docstates
 
+# Rider Ignore Rules
+.idea/
+*.iml
+*.sln.ide
+
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -393,8 +399,3 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
-
-# JetBrains Rider
-*.sln.iml
-Receiptly/.idea/.idea.Receiptly/.idea/workspace.xml
-Receiptly/.idea/.idea.Receiptly/.idea/workspace.xml
