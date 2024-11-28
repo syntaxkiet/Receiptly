@@ -23,7 +23,9 @@ namespace ReceiptlyAPI.Controllers
             return BadRequest("No file uploaded.");
         }
         using var stream = file.OpenReadStream();
-        await OCRService.ExtractReceiptDataAsync(stream);
+        //ToDo 
+        //Set up dynamic path to tessdata folder and pass
+        await OCRService.ExtractReceiptDataAsync(stream, "");
         return Ok("File processed successfully.");
     }     
     }

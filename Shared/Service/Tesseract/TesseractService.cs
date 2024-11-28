@@ -16,24 +16,35 @@ namespace Shared.Service
 {
     public class TesseractService : IOCRService
     {
-    public async Task<string> ExtractReceiptDataAsync(Stream fileStream)
+    public async Task<string> ExtractReceiptDataAsync(Stream fileStream, string tessDataPath)
     {
-        // Initialize Tesseract engine
-        using var engine = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default);
+        string tessdataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, tessDataPath);
+        Environment.SetEnvironmentVariable("TESSDATA_PREFIX", tessdataPath);
 
-        // Load the image from the stream using ImageSharp
-        using var image = await Image.LoadAsync<Rgba32>(fileStream);
+        try
+        {
+            using var engine = new TesseractEngine(tessdataPath, "eng", EngineMode.Default);
+            Console.WriteLine("Tesseract initialized successfully!");
+            // Load the image from the stream using ImageSharp
+            using var image = await Image.LoadAsync<Rgba32>(fileStream);
 
-        // Convert ImageSharp image to a format Tesseract can process
-        using var ms = new MemoryStream();
-        await image.SaveAsPngAsync(ms);
-        ms.Position = 0;
-        using var pix = Pix.LoadFromMemory(ms.ToArray());
+            // Convert ImageSharp image to a format Tesseract can process
+            using var ms = new MemoryStream();
+            await image.SaveAsPngAsync(ms);
+            ms.Position = 0;
+            using var pix = Pix.LoadFromMemory(ms.ToArray());
 
-        // Perform OCR
-        using var page = engine.Process(pix);
-        string extractedText = page.GetText();
-        return extractedText;
+            // Perform OCR
+            using var page = engine.Process(pix);
+            string extractedText = page.GetText();
+            return extractedText;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw;
+        }
+
     }
     }
 }
