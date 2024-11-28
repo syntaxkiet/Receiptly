@@ -8,6 +8,6 @@ namespace Shared.Interface
 {
     public interface IOCRService
     {
-        public Task ExtractReceiptDataAsync(Stream fileStream, string fileName);
+        public Task<string> ExtractReceiptDataAsync(Stream fileStream);
     }
 }

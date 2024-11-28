@@ -23,7 +23,7 @@ namespace ReceiptlyAPI.Controllers
             return BadRequest("No file uploaded.");
         }
         using var stream = file.OpenReadStream();
-        await OCRService.ExtractReceiptDataAsync(stream, file.FileName);
+        await OCRService.ExtractReceiptDataAsync(stream);
         return Ok("File processed successfully.");
     }     
     }
