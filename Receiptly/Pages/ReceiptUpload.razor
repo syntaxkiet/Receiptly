@@ -3,31 +3,31 @@
 
 <h3>Choose a receipt below to list items on receipt</h3>
 <FileUpload ComponentTitle="Välj ett kvitto" ButtonTitle="Ladda upp kvitto" OnFileUploaded="HandleUploadedReceipt" />
-
-
-
+<div class="row-cols-auto w-75 h-75 overflow-scroll">@extractionResult</div>
 
 @code {
-    // [Inject]
-    // private IOCRService OCRService { get; set; }
-    // [Inject]
-    // HttpClient Http { get; } 
+    [Inject]
+    HttpClient Http { get; set; }
+
+    private string extractionResult { get; set; } = "";
     public async Task HandleUploadedReceipt(IBrowserFile selectedFile)
     {
-        // var content = new MultipartFormDataContent();
-        // var fileContent = new StreamContent(selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024)); // 10 MB limit
-        // fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(selectedFile.ContentType);
-        // content.Add(fileContent, "file", selectedFile.Name);
-        //
-        // // var response = await Http.PostAsync("https://your-api-url/OCR/extractreceiptdata", content);
-        // if (response.IsSuccessStatusCode)
-        // {
-        //     // Handle success
-        // }
-        // else
-        // {
-        //     // Handle failure
-        // }
+        var content = new MultipartFormDataContent();
+        var fileContent = new StreamContent(selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024)); // 10 MB limit
+        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(selectedFile.ContentType);
+        content.Add(fileContent, "file", selectedFile.Name);
+        var response = await Http.PostAsync("ocr/extractreceiptdata", content);
+        if (response.IsSuccessStatusCode)
+        {
+            // Handle success
+        }
+        else
+        {
+            // Handle failure
+        }
         await Task.Delay(10);
     }
+    
+    
+    
 }
