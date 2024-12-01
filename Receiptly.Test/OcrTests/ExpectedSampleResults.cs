@@ -1,8 +1,8 @@
 namespace Shared.Sample;
 
-public static class ReceiptSample
+public static class ExpectedSampleResults
 {
-    public static string ReceiptString { get; set; } = @"Hemköp Gallerian
+    public static string ResultOf20241025T154757 { get; set; } = @"Hemköp Gallerian
 Tel : 016-131040
 Öppettider
 Mån-Fre 7-22, Lör-Sön 8-22

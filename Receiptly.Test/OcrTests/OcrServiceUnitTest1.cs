@@ -10,10 +10,10 @@ public class OcrServiceUnitTest1
     {
         // Arrange
         var sut = new TesseractService();
-        string expectedResult = ReceiptSample.ReceiptString;
+        string expectedResult = ExpectedSampleResults.ResultOf20241025T154757;
         //Todo
         //replace hardcoded image path 
-        string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sample", "2024-10-25T15_47_57.jpg");
+        string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"OcrTests", "Sample", "2024-10-25T15_47_57.jpg");
         string tessdataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tessdata");
         using var imageStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
 
