@@ -34,21 +34,21 @@ namespace Receiptly.Sample
                 new Receipt
                 {
                     Id = 2,
-                    ReceiptName = "Electronics Receipt",
+                    ReceiptName = "Fish Receipt",
                     PurchaseDate = DateTime.Now.AddDays(-30),
                     Articles = new List<Article>
                     {
                         new Article
                         {
                             Id = 3,
-                            ArticleName = "Phone Charger",
+                            ArticleName = "Anchovis",
                             ExpirationDate = DateTime.Now.AddYears(1),
                             ReceiptId = 2
                         },
                         new Article
                         {
                             Id = 4,
-                            ArticleName = "Laptop Warranty",
+                            ArticleName = "Kelp",
                             ExpirationDate = DateTime.Now.AddMonths(-1), 
                             ReceiptId = 2
                         }
