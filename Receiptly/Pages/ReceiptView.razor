@@ -1,0 +1,15 @@
+﻿@page "/ReceiptView"
+
+
+<h3>ReceiptView</h3>
+
+<ul>@foreach (var receipt in receipts)
+    {
+    <li>@receipt.Items</li>
+    }
+</ul>
+@code {
+List<Receipt> receipts = new List<Receipt>();
+
+   
+}
