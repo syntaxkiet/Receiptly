@@ -1,0 +1,31 @@
+@page "/NotificationSystem"
+
+@using System.Timers
+@using Receiptly.Interface
+@using Receiptly.Model
+@using Receiptly.Sample
+
+@inject IExpiryCheckService ExpiryCheckService
+
+<h3>Tracked Articles</h3>
+
+<ul>
+    @foreach (var article in articles)
+    {
+        <li>@article.ArticleName (Expires on: @article.ExpirationDate)</li>
+    }
+</ul>
+
+@code {
+
+    private List<Article> articles = MockData.GetMockArticles();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var timer = new Timer(10000); // Check every 10 seconds
+        timer.Elapsed += async (sender, e) => await ExpiryCheckService.CheckExpiryDateAsync(articles);
+        timer.Start();
+    }
+
+}
