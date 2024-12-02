@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiptlyAPI", "ReceiptlyAPI\ReceiptlyAPI.csproj", "{19FFF73F-ABD6-4777-A7B1-8C09A7C9C495}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiptly.Test", "Receiptly.Test\Receiptly.Test.csproj", "{9FADEF08-83BE-4D12-958E-5615735573C2}"
+EndProject
 
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +30,14 @@ Global
 		{19FFF73F-ABD6-4777-A7B1-8C09A7C9C495}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19FFF73F-ABD6-4777-A7B1-8C09A7C9C495}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19FFF73F-ABD6-4777-A7B1-8C09A7C9C495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD5422FE-4DA1-447D-A596-64221A7E4FF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD5422FE-4DA1-447D-A596-64221A7E4FF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD5422FE-4DA1-447D-A596-64221A7E4FF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD5422FE-4DA1-447D-A596-64221A7E4FF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FADEF08-83BE-4D12-958E-5615735573C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FADEF08-83BE-4D12-958E-5615735573C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FADEF08-83BE-4D12-958E-5615735573C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FADEF08-83BE-4D12-958E-5615735573C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
