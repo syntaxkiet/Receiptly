@@ -1,9 +1,12 @@
 ﻿@page "/receiptupload"
 <h2>Receipt uploader</h2>
 
+@* <ConnectionTest></ConnectionTest> *@
 <h3>Choose a receipt below to list items on receipt</h3>
 <FileUpload ComponentTitle="Välj ett kvitto" ButtonTitle="Ladda upp kvitto" OnFileUploaded="HandleUploadedReceipt" />
 <div class="row-cols-auto w-75 h-75 overflow-scroll">@extractionResult</div>
+
+
 
 @code {
     [Inject]
