@@ -1,0 +1,70 @@
+@page "/AddReceipt"
+@inject NavigationManager Navigation
+
+<h3>Lägg till kvitto</h3>
+<ReceiptDetailsForm Receipt="newReceipt" />
+
+<!-- Form to add new items -->
+<div class="form-group" >
+    <button class="btn btn-primary" @onclick="AddItem">Lägg till artikel</button>
+</div>
+
+<!-- Show and handle items -->
+<table class="table">
+    <thead>
+    <tr>
+        <th>Artikel</th>
+        <th>Kvantitet</th>
+        <th>Bäst före</th>
+        <th>Ta bort</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    @foreach (var item in newReceipt.Items)
+    {
+        <ReceiptItem Item="item" OnRemove="RemoveItem"/>
+    }
+    </tbody>
+</table>
+
+<!-- Save receipt-->
+<button class="btn btn-success" @onclick="SaveReceipt">Spara kvitto</button>
+
+<button @onclick="GoBack">Dina kvitton</button>
+
+@code {
+
+    private Receipt newReceipt = new()
+    {
+        StoreName = "",
+        PurchaseDate = DateTime.Today,
+        Items = new List<Item>()
+    };
+    // Add new item
+    private void AddItem()
+    {
+        newReceipt.Items.Add(new Item
+        {
+            Name = "",
+            Quantity = 1,
+            BestBeforeDate = DateTime.Today.AddDays(10)
+        });
+    }
+
+    private void RemoveItem(Item item)
+    {
+        newReceipt.Items.Remove(item);
+    }
+    // Save then to SQLLite
+    private void SaveReceipt()
+    {
+        // Change this so it will save in SQLLite and not mockdata
+        newReceipt.Id = MockData.receiptList.Count + 1; 
+        MockData.receiptList.Add(newReceipt);
+    }
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/receipts");
+    }
+}
