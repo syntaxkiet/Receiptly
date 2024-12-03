@@ -2,29 +2,43 @@
 
 @using System.Timers
 @using Receiptly.Interface
-@using Receiptly.Model
-@using Receiptly.Sample
+@using Shared.Models
+@using Receipt = Shared.Models.Receipt
 
 @inject IExpiryCheckService ExpiryCheckService
 
 <h3>Tracked Articles</h3>
 
 <ul>
-    @foreach (var article in articles)
+    @foreach (var item in GetAllItems())
     {
-        <li>@article.ArticleName (Expires on: @article.ExpirationDate)</li>
+        <li>@item.Name (Expires on: @item.BestBeforeDate)</li>
     }
 </ul>
 
 @code {
 
-    private List<Article> articles = MockData.GetMockArticles();
+    List<Shared.Models.Item> itemList = new List<Item>();
+    
+    List<Shared.Models.Item> GetAllItems()
+    {
 
+        foreach (var receipt in Shared.Models.MockData.receiptList)
+        {
+            foreach (var item in receipt.Items)
+            {
+                itemList.Add(item);
+            }
+        }
+
+        return itemList;
+    }
+    
 
     protected override async Task OnInitializedAsync()
     {
         var timer = new Timer(10000); // Check every 10 seconds
-        timer.Elapsed += async (sender, e) => await ExpiryCheckService.CheckExpiryDateAsync(articles);
+        timer.Elapsed += async (sender, e) => await ExpiryCheckService.CheckExpiryDateAsync(itemList);
         timer.Start();
     }
 

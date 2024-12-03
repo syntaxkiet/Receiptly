@@ -1,5 +1,4 @@
 using Receiptly.Interface;
-using Receiptly.Model;
 
 namespace Receiptly.Service
 {
@@ -12,13 +11,13 @@ namespace Receiptly.Service
             _notificationService = notificationService;
         }
 
-        public async Task CheckExpiryDateAsync(List<Article> articles)
+        public async Task CheckExpiryDateAsync(List<Shared.Models.Item> items)
         {
-            foreach (var article in articles)
+            foreach (var item in items)
             {
-                if (article.ExpirationDate <= DateTime.Now)
+                if (item.BestBeforeDate <= DateTime.Now)
                 {
-                    await _notificationService.NotifyAsync($"Article '{article.ArticleName}' has expired!");
+                    await _notificationService.NotifyAsync($"Article '{item.Name}' has expired!");
                 }
             }
         }

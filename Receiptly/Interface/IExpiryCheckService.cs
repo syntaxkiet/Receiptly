@@ -1,9 +1,9 @@
-using Receiptly.Model;
+
 
 namespace Receiptly.Interface
 {
     public interface IExpiryCheckService
     {
-        Task CheckExpiryDateAsync(List<Article> articles);
+        Task CheckExpiryDateAsync(List<Shared.Models.Item> items);
     }
 }

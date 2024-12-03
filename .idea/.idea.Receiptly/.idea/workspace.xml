@@ -13,12 +13,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b6e8b5c-07f6-472d-94c5-b7c39cc23212" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Shared/Models/Item.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Shared/Models/MockData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Shared/Models/Receipt.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Receiptly/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Receiptly/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiptly/Pages/Home.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Receiptly/Pages/Home.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiptly/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Receiptly/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiptly/Sample/MockData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Receiptly/Sample/MockData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiptly/Service/BrowserNotificationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Receiptly/Service/BrowserNotificationService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReceiptlyAPI/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ReceiptlyAPI/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiptly/Interface/IExpiryCheckService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Receiptly/Interface/IExpiryCheckService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiptly/Model/Article.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiptly/Model/Receipt.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiptly/Pages/NotificationSystem.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Receiptly/Pages/NotificationSystem.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiptly/Sample/MockData.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receiptly/Service/ExpiryCheckService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Receiptly/Service/ExpiryCheckService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,6 +41,16 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
