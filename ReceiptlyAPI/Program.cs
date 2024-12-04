@@ -18,7 +18,7 @@ namespace ReceiptlyAPI
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IOCRService, TesseractService>();
             var app = builder.Build();
-
+            
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
