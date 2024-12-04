@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Receiptly.Interface;
 using Receiptly.Service;
-
+using Shared.Interface;
+using Shared.Service;
 
 namespace Receiptly
 {
@@ -15,6 +16,7 @@ namespace Receiptly
             builder.RootComponents.Add<HeadOutlet>("head::after");
             builder.Services.AddScoped<INotificationService, BrowserNotificationService>();
             builder.Services.AddScoped<IExpiryCheckService, ExpiryCheckService>();
+            builder.Services.AddScoped<IReceiptService, ReceiptMockingService>();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             // builder.Services.AddScoped<IOCRService, TesseractService>();
