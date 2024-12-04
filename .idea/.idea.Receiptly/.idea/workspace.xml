@@ -12,18 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4b6e8b5c-07f6-472d-94c5-b7c39cc23212" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Shared/Models/Item.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Shared/Models/MockData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Shared/Models/Receipt.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Receiptly/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Receiptly/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiptly/Interface/IExpiryCheckService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Receiptly/Interface/IExpiryCheckService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiptly/Model/Article.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiptly/Model/Receipt.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiptly/Pages/NotificationSystem.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Receiptly/Pages/NotificationSystem.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiptly/Sample/MockData.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receiptly/Service/ExpiryCheckService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Receiptly/Service/ExpiryCheckService.cs" afterDir="false" />
-    </list>
+    <list default="true" id="4b6e8b5c-07f6-472d-94c5-b7c39cc23212" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,6 +31,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "syntaxkiet"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/syntaxkiet/Receiptly.git",
+    "accountId": "f14f7479-baab-4e30-9714-df32507e776b"
+  }
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
@@ -51,7 +52,13 @@
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/Users/Kiet/Documents/Programming/C#/Projects/Receiptly/Receiptly/Interface/IExpiryCheckService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/Users/Kiet/Documents/Programming/C#/Projects/Receiptly/Receiptly/Pages/NotificationSystem.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
+    <setting file="mock://F:/Users/Kiet/Documents/Programming/C#/Projects/Receiptly/Receiptly/Pages/NotificationSystem.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
+    <setting file="mock://F:/Users/Kiet/Documents/Programming/C#/Projects/Receiptly/Receiptly/Service/ExpiryCheckService.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/Users/Kiet/Documents/Programming/C#/Projects/Receiptly/Receiptly/Service/ExpiryCheckService.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 5
@@ -178,13 +185,24 @@
       <workItem from="1733130865231" duration="10129000" />
       <workItem from="1733145208934" duration="2033000" />
     </task>
+    <task id="LOCAL−00001" summary="Integrated Models from main">
+      <option name="closed" value="true" />
+      <created>1733239174213</created>
+      <option name="number" value="LOCAL−00001" />
+      <option name="presentableId" value="LOCAL−00001" />
+      <updated>1733239174213</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Integrated Models from main" />
+    <option name="LAST_COMMIT_MESSAGE" value="Integrated Models from main" />
   </component>
 </project>
