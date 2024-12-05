@@ -1,8 +1,9 @@
 @page "/AddReceipt"
+@inject IReceiptService ReceiptService
 @inject NavigationManager Navigation
 
 <h3>Lägg till kvitto</h3>
-<ReceiptDetailsForm Receipt="newReceipt" />
+<ReceiptDetailsForm Receipt="logic.newReceipt" />
 
 <!-- Form to add new items -->
 <div class="form-group" >
@@ -21,7 +22,7 @@
     </thead>
 
     <tbody>
-    @foreach (var item in newReceipt.Items)
+    @foreach (var item in logic.newReceipt.Items)
     {
         <ReceiptItem Item="item" OnRemove="RemoveItem"/>
     }
@@ -31,40 +32,42 @@
 <!-- Save receipt-->
 <button class="btn btn-success" @onclick="SaveReceipt">Spara kvitto</button>
 
-<button @onclick="GoBack">Dina kvitton</button>
+
 
 @code {
 
-    private Receipt newReceipt = new()
+    private AddReceiptLogic logic;
+
+    protected override void OnInitialized()
     {
-        StoreName = "",
-        PurchaseDate = DateTime.Today,
-        Items = new List<Item>()
-    };
-    // Add new item
-    private void AddItem()
-    {
-        newReceipt.Items.Add(new Item
-        {
-            Name = "",
-            Quantity = 1,
-            BestBeforeDate = DateTime.Today.AddDays(10)
-        });
+        //Initialises logic class and makes a new receipt
+        logic = new AddReceiptLogic(ReceiptService);
     }
 
-    private void RemoveItem(Item item)
+    private async Task SaveReceipt()
     {
-        newReceipt.Items.Remove(item);
+        try
+        {
+            await logic.SaveReceiptAsync();
+            Console.WriteLine("Kvitto sparat!");
+            Navigation.NavigateTo("/receipts"); // Navigate to Receipts
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ett fel inträffade: {ex.Message}");
+        }
     }
-    // Save then to SQLLite
-    private void SaveReceipt()
-    {
-        // Change this so it will save in SQLLite and not mockdata
-        newReceipt.Id = MockData.receiptList.Count + 1; 
-        MockData.receiptList.Add(newReceipt);
-    }
-    private void GoBack()
-    {
-        Navigation.NavigateTo("/receipts");
-    }
+
+    private void AddItem()
+        {
+            
+            logic.AddItem();
+        }
+
+        private void RemoveItem(Item item)
+        {
+           
+            logic.RemoveItem(item);
+        }
+
 }

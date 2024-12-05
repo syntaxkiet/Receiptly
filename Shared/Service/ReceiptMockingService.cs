@@ -15,4 +15,21 @@ public class ReceiptMockingService :IReceiptService
         // Fetch receipt by ID
         return MockData.receiptList.FirstOrDefault(r => r.Id == id);
     }
+
+    public Task SaveReceipt(Receipt receipt)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task SaveReceiptAsync(Receipt receipt)
+    {
+        if (string.IsNullOrWhiteSpace(receipt.StoreName))
+        {
+            throw new ArgumentException("Butikens namn krävs!");
+        }
+
+        // Spara kvittot (simulerat här)
+        await Task.Delay(100); // Simulera API-anrop
+        Console.WriteLine("Kvitto sparat i databasen!");
+    }
 }
