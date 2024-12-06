@@ -5,15 +5,15 @@ using Shared.Service;
 namespace ReceiptlyAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class OCRController : ControllerBase
+    [Route("ocr")]
+    public class OCRController : Controller
     {
         public OCRController(IOCRService oCRService )
         {
             OCRService = oCRService;
         }
 
-        public IOCRService OCRService { get; }
+        private IOCRService OCRService { get; set;}
         public class ReceiptDataRequest
         {
             public string FileName { get; set; }
@@ -21,7 +21,7 @@ namespace ReceiptlyAPI.Controllers
             public string ContentType { get; set; }
         }
 
-        [HttpPost("ocr/extractreceiptdata")]
+        [HttpPost("extractreceiptdata")]
         public async Task<IActionResult> ExtractReceiptData([FromBody] ReceiptDataRequest request)
         {
             if (request == null || string.IsNullOrWhiteSpace(request.FileContent))
@@ -36,7 +36,7 @@ namespace ReceiptlyAPI.Controllers
                 using var stream = new MemoryStream(fileBytes);
 
                 // TODO: Set up dynamic path to tessdata folder and pass
-                await OCRService.ExtractReceiptDataAsync(stream, "");
+                await OCRService.ExtractReceiptDataAsync(stream, "Shared\\Service\\Ocr\\Tesseract\\");
 
                 return Ok("File processed successfully.");
             }
