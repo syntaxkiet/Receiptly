@@ -1,9 +1,10 @@
 @page "/AddReceipt"
 @inject IReceiptService ReceiptService
 @inject NavigationManager Navigation
+@inject AddReceiptLogic Logic
 
 <h3>Lägg till kvitto</h3>
-<ReceiptDetailsForm Receipt="logic.newReceipt" />
+<ReceiptDetailsForm Receipt="Logic.newReceipt" />
 
 <!-- Form to add new items -->
 <div class="form-group" >
@@ -22,7 +23,7 @@
     </thead>
 
     <tbody>
-    @foreach (var item in logic.newReceipt.Items)
+    @foreach (var item in Logic.newReceipt.Items)
     {
         <ReceiptItem Item="item" OnRemove="RemoveItem"/>
     }
@@ -35,20 +36,12 @@
 
 
 @code {
-
-    private AddReceiptLogic logic;
-
-    protected override void OnInitialized()
-    {
-        //Initialises logic class and makes a new receipt
-        logic = new AddReceiptLogic(ReceiptService);
-    }
-
+    
     private async Task SaveReceipt()
     {
         try
         {
-            await logic.SaveReceiptAsync();
+            await Logic.SaveReceiptAsync();
             Console.WriteLine("Kvitto sparat!");
             Navigation.NavigateTo("/receipts"); // Navigate to Receipts
         }
@@ -61,13 +54,13 @@
     private void AddItem()
         {
             
-            logic.AddItem();
+            Logic.AddItem();
         }
 
         private void RemoveItem(Item item)
         {
            
-            logic.RemoveItem(item);
+            Logic.RemoveItem(item);
         }
 
 }

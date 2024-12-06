@@ -15,11 +15,7 @@ public class ReceiptMockingService :IReceiptService
         // Fetch receipt by ID
         return MockData.receiptList.FirstOrDefault(r => r.Id == id);
     }
-
-    public Task SaveReceipt(Receipt receipt)
-    {
-        throw new NotImplementedException();
-    }
+    
 
     public async Task SaveReceiptAsync(Receipt receipt)
     {
@@ -31,5 +27,7 @@ public class ReceiptMockingService :IReceiptService
         // Spara kvittot (simulerat här)
         await Task.Delay(100); // Simulera API-anrop
         Console.WriteLine("Kvitto sparat i databasen!");
+        
+        MockData.receiptList.Add(receipt);
     }
 }
