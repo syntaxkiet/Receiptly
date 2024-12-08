@@ -32,4 +32,18 @@ public class ReceiptServiceTests
         //Assert
         Assert.Equal("Hemköp", result.StoreName);
     }
+
+    [Fact]
+    public void GetAllReceipts_ShouldReturnEmptyList_WhenNoReceiptsExist()
+    {
+        // Arrange
+        var mockService = new Mock<IReceiptService>();
+        mockService.Setup(m => m.GetAllReceipts()).Returns(new List<Receipt>());
+
+        // Act
+        var result = mockService.Object.GetAllReceipts();
+
+        // Assert
+        Assert.Empty(result);
+    }
 }

@@ -12,7 +12,7 @@
                class="form-control" min="1"/>
     </td>
     <td>
-        <input type="date" @bind=Item.BestBeforeDate class="form-control"/>
+        <input type="date" @bind=Item.BestBeforeDate class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd")"/>
     </td>
     <td>
         <button type="button" @onclick="RemoveItem"

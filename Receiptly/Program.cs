@@ -13,6 +13,7 @@ namespace Receiptly
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
             builder.Services.AddScoped<IReceiptService, ReceiptMockingService>();
+            builder.Services.AddScoped<IItemService, ItemService>();
             builder.Services.AddTransient<AddReceiptLogic>(provider =>
             {
                 var receiptService = provider.GetRequiredService<IReceiptService>();
