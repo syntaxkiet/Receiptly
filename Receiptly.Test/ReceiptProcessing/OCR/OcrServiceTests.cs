@@ -1,20 +1,21 @@
-using Shared.Sample;
+using Receiptly.Test.ReceiptProcessing.Resources;
 using Shared.Service;
+using Shared.Service.Ocr.Tesseract;
 
-namespace Receiptly.Test;
+namespace Receiptly.Test.ReceiptProcessing.OCR;
 
-public class OcrServiceUnitTest1
+public class OcrServiceTests
 {
     [Fact]
     public async Task TesseractService_ExtractReceiptData_ReturnsExpectedResult()
     {
         // Arrange
         var sut = new TesseractService();
-        string expectedResult = ExpectedSampleResults.ResultOf20241025T154757;
+        string expectedResult = TestResourceHelper.OcrResultOfReceiptSample1;
         //Todo
         //replace hardcoded image path 
-        string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"OcrTests", "Sample", "2024-10-25T15_47_57.jpg");
-        string tessdataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tessdata");
+        string imagePath = TestResourceHelper.ReceiptSample1Path;
+        string tessdataPath = TestResourceHelper.TessDataPath;
         using var imageStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
 
         // Act

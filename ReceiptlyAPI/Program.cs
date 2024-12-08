@@ -1,6 +1,6 @@
 
 using Shared.Interface;
-using Shared.Service;
+using Shared.Service.Ocr.Tesseract;
 
 namespace ReceiptlyAPI
 {

@@ -10,7 +10,7 @@ namespace Shared.Service.ReceiptParser
     public class ReceiptParser
     {
 
-        public static List<ReceiptItem> ExtractItems(string receipt)
+        public List<ReceiptItem> ExtractReceiptItems(string receipt)
         {
             var items = new List<ReceiptItem>();
             string pattern = @"(?<Name>[A-ZÅÄÖa-zåäö\s]+?)\s(?<Quantity>\d*[,\.]?\d+)?\s?[A-Za-z]*\s?(?<UnitPrice>\d+[,\.]?\d+)?\s?(?<TotalPrice>\d+[,\.]?\d+)";
@@ -31,13 +31,5 @@ namespace Shared.Service.ReceiptParser
 
             return items;
         }
-        public class ReceiptItem
-        {
-            public string Name { get; set; }
-            public decimal? Quantity { get; set; }
-            public decimal? UnitPrice { get; set; }
-            public decimal TotalPrice { get; set; }
-        }
-
     }
 }
