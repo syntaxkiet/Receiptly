@@ -1,6 +1,7 @@
 ﻿@page "/ReceiptView"
 
 
+
 <h3>ReceiptView</h3>
 
 <ul>@foreach (var receipt in receipts)
@@ -8,8 +9,29 @@
     <li>@receipt.Items</li>
     }
 </ul>
+
 @code {
-List<Receipt> receipts = new List<Receipt>();
+    [Inject]
+    IReceiptService ReceiptService { get; set; }
+    [Inject]
+    HttpClient httpClient { get; set; }
+    List<Receipt> receipts { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        receipts = ReceiptService.GetAllReceipts();
+        if(receipts is List<Receipt>)
+        {
+            var result = await httpClient.PostAsJsonAsync("dbaccess/createorupdatereceipt", receipts);
+            if (result.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Hello World");
+            }
+            else
+            {
+                Console.WriteLine(result.Content.ToString());
+            }
+        }
+    }
 
    
 }

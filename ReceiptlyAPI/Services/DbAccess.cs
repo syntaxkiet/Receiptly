@@ -4,11 +4,12 @@ using Shared.Models;
 
 namespace ReceiptlyAPI.Services;
 
-public class ReceiptService
+public class DbAccess
+
 {
     private readonly ReceiptlyDbContext _context;
 
-    public ReceiptService(ReceiptlyDbContext context)
+    public DbAccess(ReceiptlyDbContext context)
     {
         _context = context;
     }

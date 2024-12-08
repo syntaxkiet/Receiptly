@@ -5,29 +5,30 @@ using Shared.Models;
 namespace ReceiptlyAPI.Controllers;
 
 
-[Route("api/[controller]")]
 [ApiController]
-public class ReceiptController : ControllerBase
+[Route("dbaccess")]
+public class ReceiptController : Controller
 {
-    private readonly ReceiptService _receiptService;
+    private readonly DbAccess _receiptService;
 
-    public ReceiptController(ReceiptService receiptService)
+    public ReceiptController(DbAccess receiptService)
     {
         _receiptService = receiptService;
     }
 
-    [HttpGet]
+    [HttpGet("getallreceipt")]
     public async Task<ActionResult<IEnumerable<Receipt>>> GetReceipts()
     {
         var receipts = await _receiptService.GetReceiptsAsync();
         return Ok(receipts);
+
     }
 
-    [HttpPost]
+    [HttpPost("createorupdatereceipt")]
     public async Task<ActionResult> CreateOrUpdateReceipt(List<Receipt> receipts)
     {
         await _receiptService.AddOrUpdateReceiptAsync(receipts);
-        return Ok(new { message = "Receupts have been created/updated successfully." });
+        return Ok(new { message = "Receipts have been created/updated successfully." });
     }
 
     [HttpDelete]
