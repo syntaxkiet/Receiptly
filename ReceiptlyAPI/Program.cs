@@ -24,8 +24,10 @@ namespace ReceiptlyAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IOCRService, TesseractService>();
+            builder.Services.AddDbContext<ReceiptlyDbContext>();
             builder.Services.AddScoped<DbAccess>();
 
+            //ToDo Set up proper CORS policies before moving to production
 #if DEBUG
             builder.Services.AddCors(options =>
             {
@@ -56,7 +58,14 @@ namespace ReceiptlyAPI
             app.MapControllers();
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
-            
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<ReceiptlyDbContext>();
+                context.Database.Migrate();
+            }
+
+
             app.Run();
         }
     }
