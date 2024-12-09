@@ -18,7 +18,7 @@ public class DALController : Controller
     }
 
     [HttpGet("getallreceipts")]
-    public async Task<ActionResult<string>> GetReceipts()
+    public async Task<ActionResult<List<Receipt?>>> GetReceipts()
     {
         var receipts = await _receiptService.GetReceiptsAsync();
         if (receipts == null || receipts.Count <= 0)
@@ -28,11 +28,11 @@ public class DALController : Controller
             if((receipts == null || receipts.Count <= 0))
                 return NoContent();
         }
-        //if(receipts is List<Receipt>)
-        //{
-        //    retur
-        //}
-        return Ok(receipts);
+        if (receipts != null)
+        {
+            return Json(receipts);
+        }
+        return BadRequest("No receipts found");
     }
 
     [HttpGet("getitemsfromreceiptid")]

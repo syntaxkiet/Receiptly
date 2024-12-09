@@ -2,6 +2,8 @@
 using Shared.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using ReceiptlyAPI.Data;
 using Shared.Models;
 using Receiptly;
@@ -19,7 +21,13 @@ namespace ReceiptlyAPI
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
             builder.Services.AddDbContext<ReceiptlyDbContext>();
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        // Example: Configuring settings
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+    });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
