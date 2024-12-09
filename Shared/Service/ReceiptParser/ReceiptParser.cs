@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,20 +11,17 @@ namespace Shared.Service.ReceiptParser
     public class ReceiptParser
     {
 
-        public List<ReceiptItem> ExtractReceiptItems(string receipt)
+        public List<Item> ExtractReceiptItems(string receipt)
         {
-            var items = new List<ReceiptItem>();
+            var items = new List<Item>();
             string pattern = @"(?<Name>[A-ZÅÄÖa-zåäö\s]+?)\s(?<Quantity>\d*[,\.]?\d+)?\s?[A-Za-z]*\s?(?<UnitPrice>\d+[,\.]?\d+)?\s?(?<TotalPrice>\d+[,\.]?\d+)";
             var matches = Regex.Matches(receipt, pattern);
 
             foreach (Match match in matches)
             {
-                var item = new ReceiptItem
+                var item = new Item
                 {
                     Name = match.Groups["Name"].Value.Trim(),
-                    Quantity = decimal.TryParse(match.Groups["Quantity"].Value, out var quantity) ? quantity : (decimal?)null,
-                    UnitPrice = decimal.TryParse(match.Groups["UnitPrice"].Value, out var unitPrice) ? unitPrice : (decimal?)null,
-                    TotalPrice = decimal.TryParse(match.Groups["TotalPrice"].Value, out var totalPrice) ? totalPrice : 0
                 };
 
                 items.Add(item);

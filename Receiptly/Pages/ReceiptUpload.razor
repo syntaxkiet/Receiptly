@@ -21,7 +21,7 @@
         try
         {
             // Read the file as a stream
-            using var stream = selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB limit
+            using  var stream = selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB limit
             using var memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream);
 

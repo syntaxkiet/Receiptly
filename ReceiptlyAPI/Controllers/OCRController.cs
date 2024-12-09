@@ -36,7 +36,8 @@ namespace ReceiptlyAPI.Controllers
                 using var stream = new MemoryStream(fileBytes);
 
                 // TODO: Set up dynamic path to tessdata folder and pass
-                await OCRService.ExtractReceiptDataAsync(stream, "Shared\\Service\\Ocr\\Tesseract\\");
+                var result = await OCRService.ExtractReceiptDataAsync(stream, "Shared\\Service\\Ocr\\Tesseract\\");
+                
 
                 return Ok("File processed successfully.");
             }
