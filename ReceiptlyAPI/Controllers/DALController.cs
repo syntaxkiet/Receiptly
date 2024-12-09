@@ -1,45 +1,42 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ReceiptlyAPI.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using ReceiptlyAPI.Services;
 using Shared.Models;
 
 namespace ReceiptlyAPI.Controllers;
 
+
 [ApiController]
-[Route("[controller]")]
-public class DALController : ControllerBase
+[Route("dal")]
+public class DALController : Controller
 {
-    private readonly ReceiptlyDbContext _context;
+    private readonly DbAccess _receiptService;
 
-    public DALController(ReceiptlyDbContext context)
+    public DALController(DbAccess receiptService)
     {
-        _context = context;
+        _receiptService = receiptService;
     }
-    [HttpPost("SetToDatabase")]
-    public async Task<IActionResult> SetToDatabase(string receiptJson)
-    {
-        Receipt receipt = new Receipt();
-        try
-        { 
-            receipt = JsonSerializer.Deserialize<Receipt>(receiptJson);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
 
-        if (receipt != null)
-        {
-            _context.Receipts.Add(receipt);
-            await _context.SaveChangesAsync();
-            return new OkObjectResult("Okay");
-            
-        }
-        else
-        {
-            return BadRequest();
-        }
+    [HttpGet("getallreceipts")]
+    public async Task<ActionResult<IEnumerable<Receipt>>> GetReceipts()
+    {
+        var receipts = await _receiptService.GetReceiptsAsync();
+        return Ok(receipts);
+    }
+
+
+    [HttpPost("createorupdatereceipt")]
+    public async Task<ActionResult> CreateOrUpdateReceipt(List<Receipt> receipts)
+    {
+        await _receiptService.AddOrUpdateReceiptAsync(receipts);
+        return Ok(new { message = "Receipts have been created/updated successfully." });
+    }
+
+    [HttpGet]
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteReceipt(int id)
+    {
+        await _receiptService.DeleteReceiptAsync(id);
+        return NoContent();
     }
 }
