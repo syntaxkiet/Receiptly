@@ -7,35 +7,50 @@ namespace ReceiptlyAPI.Controllers
     [Route("api/notifications")]
     public class NotificationsController : ControllerBase
     {
-        private List<Shared.Models.Receipt> mockedData;
+        private List<Shared.Models.Receipt> receiptList;
 
         public NotificationsController()
         {
-            mockedData = new List<Shared.Models.Receipt>();
+            receiptList = Shared.Models.MockData.receiptList;
         }
 
         [HttpGet]
-        public IActionResult GetNotifications()
+        public async Task<IActionResult> GetNotifications(CancellationToken cancellationToken)
         {
-            var now = DateTime.Now;
-            var notifications = new List<string>();
-
-            foreach (var receipt in mockedData)
+            var startTime = DateTime.Now;
+            
+            
+            while (!cancellationToken.IsCancellationRequested)
             {
-                foreach (var item in receipt.Items)
+                var now = DateTime.Now;
+                var notifications = new List<string>();
+
+                foreach (var receipt in receiptList)
                 {
-                    if (item.BestBeforeDate <= now)
+                    foreach (var item in receipt.Items)
                     {
-                        notifications.Add($"{item.Name} has expired!");
+                        if (item.BestBeforeDate <= now)
+                        {
+                            notifications.Add($"{item.Name} has expired!");
+                            item.BestBeforeDate = null;
+                        }
                     }
                 }
-            }
 
-            if (notifications.Any())
-            {
-                var notificationsMessage = string.Join(", ", notifications);
-                var encodedMessage = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(notificationsMessage));
-                return Ok(encodedMessage);
+                if (notifications.Any())
+                {
+                    var notificationsMessage = string.Join(", ", notifications);
+                    var encodedMessage =
+                        Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(notificationsMessage));
+                    return Ok(encodedMessage);
+                }
+
+
+                if ((DateTime.Now - startTime).TotalSeconds > 10)
+                {
+                    break;
+                }
+                await Task.Delay(1000, cancellationToken);
             }
 
             return NoContent();
