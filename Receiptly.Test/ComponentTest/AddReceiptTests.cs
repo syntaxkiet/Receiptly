@@ -63,4 +63,16 @@ public class AddReceiptTests
         Assert.Empty(sut.newReceipt.Items);
 
     }
+    [Fact]
+    public void SaveBestBeforeDate_ShouldThrowException_WhenDateIsInThePast()
+    {
+        // Arrange
+        var itemService = new ItemService(); // real implementation
+        var item = new Item { Name = "Milk", BestBeforeDate = DateTime.Now.AddDays(-1) };
+
+        // Act & Assert
+        Assert.Throws<Exception>(() => itemService.SaveBestBeforeDate(item));
+    }
+  
+   
 }
