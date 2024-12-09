@@ -21,9 +21,12 @@ public class DALController : Controller
     public async Task<ActionResult<List<Receipt>?>> GetReceipts()
     {
         var receipts = await _receiptService.GetReceiptsAsync();
-        if (receipts == null || receipts.Count <=0)
+        if (receipts == null || receipts.Count <= 0)
         {
-            return NoContent();
+            await _receiptService.AddOrUpdateReceiptAsync(MockData.receiptList);
+            receipts = await _receiptService.GetReceiptsAsync();
+            if((receipts == null || receipts.Count <= 0))
+                return NoContent();
         }
         return Ok(receipts);
     }
@@ -35,12 +38,7 @@ public class DALController : Controller
         return Ok(new { message = "Receipts have been created/updated successfully." });
     }
 
-    [HttpPost("seedmockdatabase")]
-    public async Task<ActionResult> SeedMockDatabase()
-    {
-        await _receiptService.AddOrUpdateReceiptAsync(MockData.receiptList);
-        return Ok(new { message = "Receipts have been created/updated successfully." });
-    }
+
     [HttpGet("getreceiptsfromid")]
     public async Task<ActionResult> GetReceiptFromID(int id)
     {
@@ -55,7 +53,7 @@ public class DALController : Controller
         }
     }
 
-    [HttpDelete ("deletereceiptbyid")]
+    [HttpDelete("deletereceiptbyid")]
     public async Task<IActionResult> DeleteReceipt(int id)
     {
         await _receiptService.DeleteReceiptAsync(id);

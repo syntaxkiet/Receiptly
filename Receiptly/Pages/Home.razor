@@ -18,28 +18,11 @@ Welcome to your new app.
         var result = await DalService.GetAllReceiptsAsync(HttpClient);
         if(result == null)
         {
-            try
-            {
-                var response = await HttpClient.PostAsync("seedmockdatabase", new StringContent(""));
-
-                if (response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("Database seeded successfully.");
-                }
-                else
-                {
-                    var errorMessage = await response.Content.ReadAsStringAsync();
-                    Console.Error.WriteLine($"Failed to seed database. Status: {response.StatusCode}, Error: {errorMessage}");
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.Error.WriteLine($"HTTP request failed: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
+            Console.WriteLine("Unable to seed Database");
+        }
+        else
+        {
+            Console.WriteLine("Database available");
         }
     }
 }
