@@ -12,7 +12,7 @@ public class ReceiptServiceTests
     public void GettAllReceipts_ShouldReturnAllReceipts()
     {
         //Arrange
-        var mockService = new Mock<IReceiptService>();
+        var mockService = new Mock<IReceiptDalService>();
         mockService.Setup(m => m.GetAllReceipts()).Returns(MockData.receiptList);
      
         //Act
@@ -25,7 +25,7 @@ public class ReceiptServiceTests
     public void GetReceiptById_ShouldReturnCorrectStoreName()
     {
         //Arrange
-        var mockService = new Mock<IReceiptService>();
+        var mockService = new Mock<IReceiptDalService>();
         mockService.Setup(m => m.GetReceiptById(1)).Returns(MockData.receiptList.FirstOrDefault(r => r.Id == 1));
         //Act
         var result = mockService.Object.GetReceiptById(1);

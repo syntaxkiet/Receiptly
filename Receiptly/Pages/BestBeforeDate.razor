@@ -1,6 +1,6 @@
 ﻿@page "/receipt/{id:int}"
 @inject NavigationManager Navigation
-@inject IReceiptService ReceiptService
+@inject IReceiptDalService ReceiptService
 <h3>Kvittodetaljer</h3>
 
 @if (receipt == null)

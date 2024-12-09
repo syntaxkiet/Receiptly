@@ -1,12 +1,12 @@
 
 using Shared.Interface;
-using Shared.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
 using ReceiptlyAPI.Data;
 using Shared.Models;
 using Receiptly;
 using ReceiptlyAPI.Services;
+using Shared.Service.Ocr.Tesseract;
 namespace ReceiptlyAPI
 {
     public class Program

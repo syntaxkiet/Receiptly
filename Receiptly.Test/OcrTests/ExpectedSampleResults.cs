@@ -1,4 +1,4 @@
-namespace Shared.Sample;
+namespace Receiptly.Test.OcrTests;
 
 public static class ExpectedSampleResults
 {

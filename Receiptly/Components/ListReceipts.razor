@@ -1,0 +1,22 @@
+﻿@namespace Receiptly.Components
+
+<ul>
+    @foreach (var receipt in ReceiptList)
+    {
+        <li>
+            <a @onclick="(() => OpenReceipt(receipt.Id))">
+                @receipt.StoreName - @receipt.PurchaseDate.ToShortDateString()
+            </a>
+        </li>
+    }
+</ul>
+@code {
+    [Parameter]
+    public List<Receipt> ReceiptList { get; set; } = new();
+    [Parameter]
+    public EventCallback<int> OnOpenReceipt { get; set; }
+    private void OpenReceipt(int receiptId)
+    {
+        OnOpenReceipt.InvokeAsync(receiptId);
+    }
+}

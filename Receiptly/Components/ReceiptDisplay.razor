@@ -1,0 +1,56 @@
+﻿<h3>Kvittodetaljer</h3>
+
+@if (receipt == null)
+{
+    <p>Laddar kvitto...</p>
+}
+else
+{
+    <p><b>Butik:</b> @receipt.StoreName</p>
+    <p><b>Inköpsdatum:</b> @receipt.PurchaseDate.ToShortDateString()</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Artikel</th>
+                <th>Kvantitet</th>
+                <th>Bäst före</th>
+                <th>Uppdatera</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in receipt.Items)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>
+                        <input type="date" @bind="item.BestBeforeDate" />
+                    </td>
+                    <td>
+                        <button @onclick="SaveBestBeforeDate">Spara</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button @onclick="GoBack">Tillbaka</button>
+}
+
+@code {
+    [Parameter]
+    public Receipt receipt { get; set; } = new();
+    public EventCallback OnGoBackPressed;
+
+    private void SaveBestBeforeDate()
+    {
+        // Add logic to save the Bestbeforedate
+        Console.WriteLine("Bäst före-datum sparat!");
+    }
+
+    private void GoBack()
+    {
+        OnGoBackPressed.InvokeAsync();
+    }
+}

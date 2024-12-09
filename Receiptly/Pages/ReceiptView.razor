@@ -1,37 +1,49 @@
 ﻿@page "/ReceiptView"
-
-
-
-<h3>ReceiptView</h3>
-
-<ul>@foreach (var receipt in receipts)
+@if(selectedReceipt == null)
+{
+    @if(receipts.Count <= 0)
     {
-    <li>@receipt.Items</li>
+        <h3>Hämtar kvitton</h3>
     }
-</ul>
+    else
+    {
+        <ListReceipts ReceiptList="receipts" OnOpenReceipt="OnReceiptSelected"/>
+    }
+}
+else
+{
+
+}
 
 @code {
     [Inject]
-    IReceiptService ReceiptService { get; set; }
+    IReceiptDalService ReceiptService { get; set; }
     [Inject]
     HttpClient httpClient { get; set; }
     List<Receipt> receipts { get; set; } = new();
-    protected override async Task OnInitializedAsync()
+    private Receipt? selectedReceipt { get; set; }
+
+    private void OnReceiptSelected(int selectedReceiptId)
     {
-        receipts = ReceiptService.GetAllReceipts();
-        if(receipts is List<Receipt>)
-        {
-            var result = await httpClient.PostAsJsonAsync("dbaccess/createorupdatereceipt", receipts);
-            if (result.IsSuccessStatusCode)
-            {
-                Console.WriteLine("Hello World");
-            }
-            else
-            {
-                Console.WriteLine(result.Content.ToString());
-            }
-        }
+        selectedReceipt = receipts.FirstOrDefault(r => r.Id == selectedReceiptId);
+        StateHasChanged();
     }
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     if(receipts is List<Receipt>)
+    //     {
+    //         var result = await httpClient.PostAsJsonAsync("dal/createorupdatereceipt", receipts);
+    //         if (result.IsSuccessStatusCode)
+    //         {
+    //             Console.WriteLine("Hello World");
+    //         }
+    //         else
+    //         {
+    //             Console.WriteLine(result.Content.ToString());
+    //         }
+    //     }
+    // }
 
    
 }
