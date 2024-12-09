@@ -32,9 +32,18 @@ else
         }
     }
 
-    private void HandleReceiptSelected(int selectedReceiptId)
+    private async void HandleReceiptSelected(int selectedReceiptId)
     {
         selectedReceipt = receipts.FirstOrDefault(r => r.Id == selectedReceiptId);
+        //ToDO setup eager loading of receipt instead of fetching items from id
+        if (selectedReceipt != null)
+        {
+            var itemList = await Dal.GetItemsFromReceiptIdAsync(selectedReceiptId, httpClient);
+            if(itemList is List<Item>)
+            {
+                selectedReceipt.Items = itemList;
+            }
+        }
         StateHasChanged();
     }
 

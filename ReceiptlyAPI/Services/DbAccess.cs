@@ -24,6 +24,10 @@ public class DbAccess
         return await _context.Receipts.FindAsync(id);
     }
 
+    public async Task<List<Item>?> GetItemsFromReceiptIdAsync(int receiptId)
+    {
+        return await _context.ReceiptItems.Where(ri => ri.ReceiptId == receiptId).ToListAsync();
+    }
     public async Task AddOrUpdateReceiptAsync(List<Receipt> receipts)
     {
         foreach (var receipt in receipts)

@@ -45,5 +45,22 @@ namespace Shared.Service
             }
             return null;
         }
+
+        public static async Task<List<Item>?> SafeReadExtractItemListFromJson(HttpContent content)
+        {
+            try
+            {
+                return await content.ReadFromJsonAsync<List<Item>>();
+            }
+            catch (JsonException ex)
+            {
+                Console.Error.WriteLine($"JSON deserialization failed: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unexpected error during deserialization: {ex.Message}");
+            }
+            return null;
+        }
     }
 }

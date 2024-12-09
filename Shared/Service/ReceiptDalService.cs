@@ -23,6 +23,15 @@ namespace Shared.Service
             return null;
         }
 
+        public async Task<List<Item>?> GetItemsFromReceiptIdAsync(int id, HttpClient http)
+        {
+            var response = await http.GetAsync($"getitemsfromreceiptid/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await JsonHelper.SafeReadExtractItemListFromJson(response.Content);
+            }
+            return null;
+        }
         public async Task<Receipt?> GetReceiptByIdAsync(int id, HttpClient http)
         {
             var response = await http.GetAsync($"dal/getreceiptbyid/{id}");
