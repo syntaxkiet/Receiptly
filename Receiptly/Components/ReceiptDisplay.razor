@@ -41,7 +41,8 @@ else
 @code {
     [Parameter]
     public Receipt receipt { get; set; } = new();
-    public EventCallback OnGoBackPressed;
+    [Parameter]
+    public EventCallback OnGoBackPressed { get; set; }
 
     private void SaveBestBeforeDate()
     {

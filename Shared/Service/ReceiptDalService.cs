@@ -1,41 +1,47 @@
 ﻿using Shared.Interface;
 using Shared.Models;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Shared.Service
 {
     public class ReceiptDalService : IReceiptDalService
     {
-        public void DeleteReceiptById(int id, HttpClient http)
+        public async Task DeleteReceiptByIdAsync(int id, HttpClient http)
         {
-            throw new NotImplementedException();
+            await http.DeleteAsync($"deletereceiptbyid/{id}");
         }
 
-        public List<Receipt> GetAllReceipts(HttpClient? http)
+        public async Task<List<Receipt>?> GetAllReceiptsAsync(HttpClient http)
         {
-            if (http == null)
+
+            var response = await http.GetAsync($"dal/getallreceipts");
+            if (response.IsSuccessStatusCode)
             {
-                return new List<Receipt>();
+                return await JsonHelper.SafeReadExtractReceiptListFromJson(response.Content);
             }
-            else
+            return null;
+        }
+
+        public async Task<Receipt?> GetReceiptByIdAsync(int id, HttpClient http)
+        {
+            var response = await http.GetAsync($"dal/getreceiptbyid/{id}");
+            if (response.IsSuccessStatusCode)
             {
-                var response = http.GetAsync("dal/getallreceipts");
-                if(response.)
+                return await JsonHelper.SafeExtractReceiptFromJson(response.Content);
             }
+            return null;
         }
 
-        public Receipt? GetReceiptById(int id, HttpClient? http)
+
+        public async Task CreateReceiptsAsync(List<Receipt> receipts, HttpClient http)
         {
-            throw new NotImplementedException();
+            await http.PostAsJsonAsync($"dal/createorupdatereceipts", receipts);
         }
 
-        public void SaveReceipts(List<Receipt> receipts, HttpClient http)
+        public async Task UpdateReceiptsAsync(List<Receipt> receipts, HttpClient http)
         {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateReceipts(List<Receipt> receipts, HttpClient http)
-        {
-            throw new NotImplementedException();
+            await http.PostAsJsonAsync($"dal/createorupdatereceipts", receipts);
         }
     }
 }

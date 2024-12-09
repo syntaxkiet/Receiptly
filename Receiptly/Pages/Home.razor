@@ -5,3 +5,41 @@
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+@code {
+    [Inject]
+    public HttpClient HttpClient { get; set; } = new();
+    [Inject]
+    public IReceiptDalService DalService { get; set; }
+    [Inject] 
+    public IReceiptService ReceiptMockService { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await DalService.GetAllReceiptsAsync(HttpClient);
+        if(result == null)
+        {
+            try
+            {
+                var response = await HttpClient.PostAsync("seedmockdatabase", new StringContent(""));
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Database seeded successfully.");
+                }
+                else
+                {
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    Console.Error.WriteLine($"Failed to seed database. Status: {response.StatusCode}, Error: {errorMessage}");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.Error.WriteLine($"HTTP request failed: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
+        }
+    }
+}

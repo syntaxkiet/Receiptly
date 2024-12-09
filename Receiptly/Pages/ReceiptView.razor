@@ -7,43 +7,40 @@
     }
     else
     {
-        <ListReceipts ReceiptList="receipts" OnOpenReceipt="OnReceiptSelected"/>
+        <ListReceipts ReceiptList="receipts" OnOpenReceipt="HandleReceiptSelected"/>
     }
 }
 else
 {
-
+    <ReceiptDisplay receipt="selectedReceipt" OnGoBackPressed="HandleGoBackPressed"/>
 }
 
 @code {
     [Inject]
-    IReceiptDalService ReceiptService { get; set; }
+    private IReceiptDalService Dal { get; set; }
     [Inject]
     HttpClient httpClient { get; set; }
     List<Receipt> receipts { get; set; } = new();
     private Receipt? selectedReceipt { get; set; }
 
-    private void OnReceiptSelected(int selectedReceiptId)
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Dal.GetAllReceiptsAsync(httpClient);
+        if(result is List<Receipt>)
+        {
+            receipts = result;
+        }
+    }
+
+    private void HandleReceiptSelected(int selectedReceiptId)
     {
         selectedReceipt = receipts.FirstOrDefault(r => r.Id == selectedReceiptId);
         StateHasChanged();
     }
 
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     if(receipts is List<Receipt>)
-    //     {
-    //         var result = await httpClient.PostAsJsonAsync("dal/createorupdatereceipt", receipts);
-    //         if (result.IsSuccessStatusCode)
-    //         {
-    //             Console.WriteLine("Hello World");
-    //         }
-    //         else
-    //         {
-    //             Console.WriteLine(result.Content.ToString());
-    //         }
-    //     }
-    // }
-
-   
+    private void HandleGoBackPressed()
+    {
+        selectedReceipt = null;
+        StateHasChanged();
+    }  
 }

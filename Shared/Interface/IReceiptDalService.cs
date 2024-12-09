@@ -4,9 +4,9 @@ namespace Shared.Interface;
 
 public interface IReceiptDalService
 {
-    Task<List<Receipt>> GetAllReceipts(HttpClient? http);
-    Task<Receipt?> GetReceiptById(int id, HttpClient? http);
-    Task SaveReceipts(List<Receipt> receipts, HttpClient http);
-    Task DeleteReceiptById(int id, HttpClient http);
-    Task UpdateReceipts(List<Receipt> receipts, HttpClient http);
+    Task<List<Receipt>?> GetAllReceiptsAsync(HttpClient http);
+    Task<Receipt?> GetReceiptByIdAsync(int id, HttpClient? http);
+    Task CreateReceiptsAsync(List<Receipt> receipts, HttpClient http);
+    Task DeleteReceiptByIdAsync(int id, HttpClient http);
+    Task UpdateReceiptsAsync(List<Receipt> receipts, HttpClient http);
 }

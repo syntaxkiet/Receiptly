@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReceiptlyAPI.Services;
 using Shared.Models;
+using System.Text.Json;
 
 namespace ReceiptlyAPI.Controllers;
 
@@ -17,23 +18,44 @@ public class DALController : Controller
     }
 
     [HttpGet("getallreceipts")]
-    public async Task<ActionResult<IEnumerable<Receipt>>> GetReceipts()
+    public async Task<ActionResult<List<Receipt>?>> GetReceipts()
     {
         var receipts = await _receiptService.GetReceiptsAsync();
+        if (receipts == null || receipts.Count <=0)
+        {
+            return NoContent();
+        }
         return Ok(receipts);
     }
 
 
     [HttpPost("createorupdatereceipt")]
-    public async Task<ActionResult> CreateOrUpdateReceipt(List<Receipt> receipts)
+    public async Task<ActionResult> CreateOrUpdateReceipt([FromBody] JsonElement jsonElement)
     {
-        await _receiptService.AddOrUpdateReceiptAsync(receipts);
         return Ok(new { message = "Receipts have been created/updated successfully." });
     }
 
-    [HttpGet]
+    [HttpPost("seedmockdatabase")]
+    public async Task<ActionResult> SeedMockDatabase()
+    {
+        await _receiptService.AddOrUpdateReceiptAsync(MockData.receiptList);
+        return Ok(new { message = "Receipts have been created/updated successfully." });
+    }
+    [HttpGet("getreceiptsfromid")]
+    public async Task<ActionResult> GetReceiptFromID(int id)
+    {
+        var receipt = await _receiptService.GetReceiptByIdAsync(id);
+        if (receipt is Receipt)
+        {
+            return Ok(receipt);
+        }
+        else
+        {
+            return NotFound();
+        }
+    }
 
-    [HttpDelete]
+    [HttpDelete ("deletereceiptbyid")]
     public async Task<IActionResult> DeleteReceipt(int id)
     {
         await _receiptService.DeleteReceiptAsync(id);

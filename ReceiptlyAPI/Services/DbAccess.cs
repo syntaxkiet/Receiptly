@@ -14,12 +14,12 @@ public class DbAccess
         _context = context;
     }
 
-    public async Task<List<Receipt>> GetReceiptsAsync()
+    public async Task<List<Receipt>?> GetReceiptsAsync()
     {
         return await _context.Receipts.ToListAsync();
     }
 
-    public async Task<Receipt> GetReceiptByIdAsync(int id)
+    public async Task<Receipt?> GetReceiptByIdAsync(int id)
     {
         return await _context.Receipts.FindAsync(id);
     }
@@ -47,7 +47,7 @@ public class DbAccess
     public async Task DeleteReceiptAsync(int id)
     {
         var receipt = await _context.Receipts.FindAsync(id);
-        if (receipt == null)
+        if (receipt != null)
         {
             _context.Receipts.Remove(receipt);
             await _context.SaveChangesAsync();

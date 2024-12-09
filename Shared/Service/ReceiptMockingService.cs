@@ -3,31 +3,31 @@ using Shared.Models;
 
 namespace Shared.Service;
 
-public class ReceiptMockingService :IReceiptDalService
+public class ReceiptMockingService :IReceiptService
 {
-    public Task DeleteReceiptById(int id, HttpClient? http)
-    {
-        throw new NotImplementedException();
+    public List<Receipt> GetAllReceipts()
+        {
+        // Return mock data for now
+        return MockData.receiptList;
     }
-
-    public Task<List<Receipt>> GetAllReceipts(HttpClient? http)
-    {
-                // Return mock data for now
-        return Task.FromResult(MockData.receiptList);
-    }
-
-    public Task<Receipt?> GetReceiptById(int id, HttpClient? http)
+    public Receipt? GetReceiptById(int id)
     {
         // Fetch receipt by ID
-        return Task.FromResult(MockData.receiptList.Find(r => r.Id == id));
+        return MockData.receiptList.FirstOrDefault(r => r.Id == id);
     }
-    public Task SaveReceipts(List<Receipt> receipts, HttpClient http)
-    {
-        throw new NotImplementedException();
-    }
+    
 
-    public Task UpdateReceipts(List<Receipt> receipts, HttpClient http)
+    public async Task SaveReceiptAsync(Receipt receipt)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(receipt.StoreName))
+        {
+            throw new ArgumentException("Butikens namn krävs!");
+        }
+
+        // Spara kvittot (simulerat här)
+        await Task.Delay(100); // Simulera API-anrop
+        Console.WriteLine("Kvitto sparat i databasen!");
+        
+        MockData.receiptList.Add(receipt);
     }
 }
