@@ -7,5 +7,5 @@ public class Item
     public int Quantity { get; set; }
     public DateTime? BestBeforeDate { get; set; }
     public int? ReceiptId { get; set; }
-    public virtual Receipt? Receipt { get; set; }
+    public Receipt? Receipt { get; set; }
 }

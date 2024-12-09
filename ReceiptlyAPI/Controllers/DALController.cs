@@ -23,7 +23,7 @@ public class DALController : Controller
         var receipts = await _receiptService.GetReceiptsAsync();
         if (receipts == null || receipts.Count <= 0)
         {
-            await _receiptService.AddOrUpdateReceiptAsync(MockData.receiptList);
+            await _receiptService.AddOrUpdateReceiptAsync(MockReceipts.receiptList);
             receipts = await _receiptService.GetReceiptsAsync();
             if((receipts == null || receipts.Count <= 0))
                 return NoContent();

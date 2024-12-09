@@ -16,7 +16,7 @@ public class DbAccess
 
     public async Task<List<Receipt>?> GetReceiptsAsync()
     {
-        return await _context.Receipts.ToListAsync();
+        return await _context.Receipts.Include(r => r.Items).ToListAsync();
     }
 
     public async Task<Receipt?> GetReceiptByIdAsync(int id)

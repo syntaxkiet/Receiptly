@@ -11,8 +11,8 @@ using ReceiptlyAPI.Data;
 namespace ReceiptlyAPI.Migrations
 {
     [DbContext(typeof(ReceiptlyDbContext))]
-    [Migration("20241208223836_UpdatedNullabilityAndLazyLoadingVirtualProps")]
-    partial class UpdatedNullabilityAndLazyLoadingVirtualProps
+    [Migration("20241209111830_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
