@@ -12,8 +12,8 @@ public class MockData
             Items = new List<Item>
             {
                 new Item { Id = 1, Name = "Mjölk", Quantity = 1, BestBeforeDate = DateTime.Now.AddSeconds(-1) },
-                new Item { Id = 2, Name = "Bröd", Quantity = 2, BestBeforeDate = DateTime.Now.AddDays(5) },
-                new Item { Id = 3, Name = "Ägg", Quantity = 1, BestBeforeDate = DateTime.Now.AddDays(10) }
+                new Item { Id = 2, Name = "Bröd", Quantity = 2, BestBeforeDate = DateTime.Now.AddSeconds(20) },
+                new Item { Id = 3, Name = "Ägg", Quantity = 1, BestBeforeDate = DateTime.Now.AddSeconds(25) }
             }
         },
         new Receipt

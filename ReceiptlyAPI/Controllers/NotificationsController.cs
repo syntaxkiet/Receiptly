@@ -29,7 +29,7 @@ namespace ReceiptlyAPI.Controllers
                 {
                     foreach (var item in receipt.Items)
                     {
-                        if (item.BestBeforeDate <= now)
+                        if (item.BestBeforeDate <= now && item.BestBeforeDate != null)
                         {
                             notifications.Add($"{item.Name} has expired!");
                             item.BestBeforeDate = null;
@@ -40,15 +40,14 @@ namespace ReceiptlyAPI.Controllers
                 if (notifications.Any())
                 {
                     var notificationsMessage = string.Join(", ", notifications);
-                    var encodedMessage =
-                        Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(notificationsMessage));
+                    var encodedMessage = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(notificationsMessage));
                     return Ok(encodedMessage);
                 }
-
+                
 
                 if ((DateTime.Now - startTime).TotalSeconds > 10)
                 {
-                    break;
+                    return NoContent();
                 }
                 await Task.Delay(1000, cancellationToken);
             }
