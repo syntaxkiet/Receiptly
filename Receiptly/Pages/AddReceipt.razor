@@ -1,0 +1,66 @@
+@page "/AddReceipt"
+@inject IReceiptService ReceiptService
+@inject NavigationManager Navigation
+@inject AddReceiptLogic Logic
+
+<h3>Lägg till kvitto</h3>
+<ReceiptDetailsForm Receipt="Logic.newReceipt" />
+
+<!-- Form to add new items -->
+<div class="form-group" >
+    <button class="btn btn-primary" @onclick="AddItem">Lägg till artikel</button>
+</div>
+
+<!-- Show and handle items -->
+<table class="table">
+    <thead>
+    <tr>
+        <th>Artikel</th>
+        <th>Kvantitet</th>
+        <th>Bäst före</th>
+        <th>Ta bort</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    @foreach (var item in Logic.newReceipt.Items)
+    {
+        <ReceiptItem Item="item" OnRemove="RemoveItem"/>
+    }
+    </tbody>
+</table>
+
+<!-- Save receipt-->
+<button class="btn btn-success" @onclick="SaveReceipt">Spara kvitto</button>
+
+
+
+@code {
+    
+    private async Task SaveReceipt()
+    {
+        try
+        {
+            await Logic.SaveReceiptAsync();
+            Console.WriteLine("Kvitto sparat!");
+            Navigation.NavigateTo("/receipts"); // Navigate to Receipts
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ett fel inträffade: {ex.Message}");
+        }
+    }
+
+    private void AddItem()
+        {
+            
+            Logic.AddItem();
+        }
+
+        private void RemoveItem(Item item)
+        {
+           
+            Logic.RemoveItem(item);
+        }
+
+}

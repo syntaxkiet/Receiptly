@@ -40,7 +40,7 @@ namespace ReceiptlyAPI
 
 
             var app = builder.Build();
-
+            
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -49,10 +49,9 @@ namespace ReceiptlyAPI
             }
             app.UseCors();
             app.UseHttpsRedirection();
-
+            app.UseCors("AllowAll");
             app.UseAuthorization();
-
-
+            
             app.MapControllers();
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
