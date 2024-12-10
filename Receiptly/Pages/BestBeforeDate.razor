@@ -1,6 +1,7 @@
 ﻿@page "/receipt/{id:int}"
 @inject NavigationManager Navigation
 @inject IReceiptService ReceiptService
+@inject IItemService ItemService
 <h3>Kvittodetaljer</h3>
 
 @if (receipt == null)
@@ -28,10 +29,10 @@ else
                 <td>@item.Name</td>
                 <td>@item.Quantity</td>
                 <td>
-                    <input type="date" @bind="item.BestBeforeDate" />
+                    <input type="date" @bind="item.BestBeforeDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
                 </td>
                 <td>
-                    <button @onclick="SaveBestBeforeDate">Spara</button>
+                    <button @onclick="() =>SaveBestBeforeDate(item)">Spara</button>
                 </td>
             </tr>
         }
@@ -55,10 +56,16 @@ else
 
     }
 
-    private void SaveBestBeforeDate()
+    private void SaveBestBeforeDate(Item item)
     {
-        // Add logic to save the Bestbeforedate
-        Console.WriteLine("Bäst före-datum sparat!");
+        try
+        {
+            ItemService.SaveBestBeforeDate(item);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ett fel inträffade: {ex.Message}");
+        }
     }
 
     private void GoBack()

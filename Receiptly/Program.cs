@@ -17,6 +17,12 @@ namespace Receiptly
             builder.Services.AddScoped<INotificationService, BrowserNotificationService>();
             builder.Services.AddScoped<IExpiryCheckService, ExpiryCheckService>();
             builder.Services.AddScoped<IReceiptService, ReceiptMockingService>();
+            builder.Services.AddScoped<IItemService, ItemService>();
+            builder.Services.AddTransient<AddReceiptLogic>(provider =>
+            {
+                var receiptService = provider.GetRequiredService<IReceiptService>();
+                return new AddReceiptLogic(receiptService);
+            });
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             // builder.Services.AddScoped<IOCRService, TesseractService>();
