@@ -39,7 +39,7 @@ namespace ReceiptlyAPI.Controllers
 
                 if (notifications.Any())
                 {
-                    var notificationsMessage = string.Join(", ", notifications);
+                    var notificationsMessage = string.Join("\n", notifications);
                     var encodedMessage = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(notificationsMessage));
                     return Ok(encodedMessage);
                 }

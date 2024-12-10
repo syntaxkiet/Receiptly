@@ -9,12 +9,12 @@
 <ul>
     @foreach (var notification in Notifications)
     {
-        <li>@notification</li>
+        <li>@((MarkupString)notification)</li>
     }
 </ul>
 
 <button @onclick="StartPolling" disabled="@IsPolling">Start Polling</button>
-<button @onclick="StopPolling" disabled="!IsPolling">Stop Polling</button>
+<button @onclick="StopPolling" disabled="@(IsPolling == false)">Stop Polling</button>
 
 <p>@StatusMessage</p>
 
@@ -29,6 +29,8 @@
         if (IsPolling) return;
 
         IsPolling = true;
+        StateHasChanged(); 
+
         CancellationTokenSource = new CancellationTokenSource();
         Console.WriteLine("Polling started.");
         StatusMessage = "Polling notifications...";
@@ -47,27 +49,23 @@
 
                     Notifications.Add(decodedMessage);
                     await NotificationService.NotifyAsync(decodedMessage);
-                    Console.WriteLine("Received notifications.");
                     StatusMessage = "Notification received.";
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                 {
-                    Console.WriteLine("No new notifications.");
                     StatusMessage = "No new notifications.";
                 }
                 else
                 {
-                    Console.WriteLine($"Unexpected status code: {response.StatusCode}");
                     StatusMessage = $"Error: {response.StatusCode}";
                     break; 
                 }
-                
+
                 await Task.Delay(5000, CancellationTokenSource.Token);
             }
         }
         catch (OperationCanceledException)
         {
-            Console.WriteLine("Client ready to poll.");
             StatusMessage = "Polling stopped.";
         }
         catch (Exception ex)
@@ -76,18 +74,21 @@
         }
         finally
         {
-            //TODO: Resolve application flow to exit polling state
-            Console.WriteLine("Polling stopped, state change initiated.");
             IsPolling = false;
+            Console.WriteLine("Polling stopped.");
             StateHasChanged(); 
         }
     }
 
     private void StopPolling()
     {
+        if (!IsPolling) return;
+
         CancellationTokenSource?.Cancel();
+        IsPolling = false; // Ensure IsPolling is reset
         Console.WriteLine("Stopped the polling.");
         StatusMessage = "Polling stopped.";
+        StateHasChanged(); 
     }
 
     protected override void OnInitialized()
