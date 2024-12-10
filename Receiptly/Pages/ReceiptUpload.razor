@@ -1,4 +1,6 @@
 ﻿@page "/receiptupload"
+@using System.Text
+@using System.Text.Json
 <h2>Receipt uploader</h2>
 
 @* <ConnectionTest></ConnectionTest> *@
@@ -13,24 +15,60 @@
     HttpClient Http { get; set; }
 
     private string extractionResult { get; set; } = "";
+    
     public async Task HandleUploadedReceipt(IBrowserFile selectedFile)
     {
-        var content = new MultipartFormDataContent();
-        var fileContent = new StreamContent(selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024)); // 10 MB limit
-        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(selectedFile.ContentType);
-        content.Add(fileContent, "file", selectedFile.Name);
-        var response = await Http.PostAsync("ocr/extractreceiptdata", content);
-        if (response.IsSuccessStatusCode)
+        try
         {
-            // Handle success
+            // Read the file as a stream
+            using  var stream = selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB limit
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+
+            // Convert the file data to Base64
+            var base64String = Convert.ToBase64String(memoryStream.ToArray());
+
+            // Create the payload
+            var payload = new { FileName = selectedFile.Name, FileContent = base64String, ContentType = selectedFile.ContentType };
+
+            // Serialize payload to JSON
+            var jsonPayload = JsonSerializer.Serialize(payload);
+
+            // Send the JSON payload to the server
+            var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+            var response = await Http.PostAsync("ocr/extractreceiptdata", httpContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Handle success
+            }
+            else
+            {
+                // Handle failure
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // Handle failure
+            // Handle exceptions
+            Console.Error.WriteLine($"Error during file upload: {ex.Message}");
         }
-        await Task.Delay(10);
     }
-    
-    
-    
+
+    // public async Task HandleUploadedReceipt(IBrowserFile selectedFile)
+    // {
+    //     var content = new MultipartFormDataContent();
+    //     var fileContent = new StreamContent(selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024)); // 10 MB limit
+    //     fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(selectedFile.ContentType);
+    //     content.Add(fileContent, "file", selectedFile.Name);
+    //     var response = await Http.PostAsync("ocr/extractreceiptdata", content);
+    //     if (response.IsSuccessStatusCode)
+    //     {
+    //         // Handle success
+    //     }
+    //     else
+    //     {
+    //         // Handle failure
+    //     }
+    //     await Task.Delay(10);
+    // }
 }

@@ -10,13 +10,15 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.11" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Private.Uri" Version="4.3.2" />
+    <PackageReference Include="System.Text.Json" Version="9.0.0" />
     <PackageReference Include="Tesseract" Version="5.2.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="tessdata\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+ <ItemGroup>
+    <None Include="tessdata\**\*" CopyToOutputDirectory="PreserveNewest" />
+</ItemGroup>
+
     
 </Project>

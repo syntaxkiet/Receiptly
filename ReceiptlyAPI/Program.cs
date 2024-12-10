@@ -1,5 +1,6 @@
 
 using Shared.Interface;
+using Shared.Service.ReceiptParser;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,7 @@ namespace ReceiptlyAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IOCRService, TesseractService>();
+            builder.Services.AddScoped<IReceiptStringParser, ReceiptParser>();
             builder.Services.AddDbContext<ReceiptlyDbContext>();
             builder.Services.AddScoped<DbAccess>();
 
