@@ -18,6 +18,7 @@ namespace Receiptly.Service
                 if (item.BestBeforeDate <= DateTime.Now)
                 {
                     await _notificationService.NotifyAsync($"Article '{item.Name}' has expired!");
+                    item.BestBeforeDate = null;
                 }
             }
         }
