@@ -1,0 +1,16 @@
+
+
+<div class="form-group">
+    <label for="StoreName">Butik</label>
+    <input id="StoreName" type="text" @bind="Receipt.StoreName"
+           class="form-control" placeholder="Ange butikens namn"/>
+</div>
+<div class="form-group">
+    <label for="PurchaseDate">Inköpsdatum</label>
+    <input id="PurchaseDate" type="date" @bind="Receipt.PurchaseDate"
+           class="form-control" />
+</div>
+@code {
+    [Parameter]
+    public Receipt Receipt { get; set; } = new();
+}
