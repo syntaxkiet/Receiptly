@@ -34,10 +34,10 @@
         return itemList;
     }
     
-
+    
     protected override async Task OnInitializedAsync()
     {
-        var timer = new Timer(10000); // Check every 10 seconds
+        var timer = new Timer(10000);
         timer.Elapsed += async (sender, e) => await ExpiryCheckService.CheckExpiryDateAsync(itemList);
         timer.Start();
     }

@@ -1,3 +1,4 @@
+using Microsoft.JSInterop;
 using Receiptly.Interface;
 using Moq;
 using Receiptly.Service;
@@ -31,4 +32,24 @@ public class ExpiryCheckServiceTests
         mockNotificationService.Verify(n => n.NotifyAsync(It.IsAny<string>()), Times.Once);
         
     }
+    
+    [Fact]
+    public async Task NotifyAsync_CallsJsRuntimeWithCorrectMessage()
+    {
+        // Arrange
+        var jsRuntimeMock = new Mock<IJSRuntime>();
+        var notificationService = new BrowserNotificationService(jsRuntimeMock.Object);
+
+        var expectedMessage = "Test Notification";
+
+        // Act
+        await notificationService.NotifyAsync(expectedMessage);
+
+        // Assert
+        jsRuntimeMock.Verify(
+            js => js.InvokeVoidAsync("notify", It.Is<object[]>(args => (string)args[0] == expectedMessage)),
+            Times.Once
+        );
+    }
+    
 }
