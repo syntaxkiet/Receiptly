@@ -17,6 +17,7 @@ namespace Receiptly
             builder.Services.AddScoped<INotificationService, BrowserNotificationService>();
             builder.Services.AddScoped<IExpiryCheckService, ExpiryCheckService>();
             builder.Services.AddScoped<IReceiptService, ReceiptMockingService>();
+            builder.Services.AddScoped<IReceiptDalService, ReceiptDalService>();
             builder.Services.AddScoped<IItemService, ItemService>();
             builder.Services.AddTransient<AddReceiptLogic>(provider =>
             {
