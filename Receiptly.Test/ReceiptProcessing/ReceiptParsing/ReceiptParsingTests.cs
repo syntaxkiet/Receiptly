@@ -20,7 +20,7 @@ namespace Receiptly.Test.ReceiptProcessing.ReceiptParsing
             var expected = TestResourceHelper.ExpectedReceiptItems;
 
             //Act
-            var testresult = sut.ExtractReceiptItems(sample1string);
+            var testresult = sut.ExtractReceiptFromImageText(sample1string);
 
             //Assert
             Assert.Equal(expected, testresult);

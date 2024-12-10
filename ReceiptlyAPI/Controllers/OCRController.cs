@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Interface;
+using Shared.Models;
 using Shared.Service;
 namespace ReceiptlyAPI.Controllers
 {
@@ -8,12 +9,15 @@ namespace ReceiptlyAPI.Controllers
     [Route("ocr")]
     public class OCRController : Controller
     {
-        public OCRController(IOCRService oCRService )
+        public OCRController(IOCRService oCRService, IReceiptStringParser receiptStringParser)
         {
             OCRService = oCRService;
+            ReceiptStringParser = receiptStringParser;
         }
 
-        private IOCRService OCRService { get; set;}
+        private IOCRService OCRService { get; set; }
+        public IReceiptStringParser ReceiptStringParser { get; }
+
         public class ReceiptDataRequest
         {
             public string FileName { get; set; }
@@ -36,10 +40,15 @@ namespace ReceiptlyAPI.Controllers
                 using var stream = new MemoryStream(fileBytes);
 
                 // TODO: Set up dynamic path to tessdata folder and pass
-                var result = await OCRService.ExtractReceiptDataAsync(stream, "Shared\\Service\\Ocr\\Tesseract\\");
-                
-
-                return Ok("File processed successfully.");
+                var textFromImage = await OCRService.ExtractReceiptDataAsync(stream, "Shared\\Service\\Ocr\\Tesseract\\");
+                if (textFromImage != null)
+                {
+                    var result = ReceiptStringParser.ParseReceiptFromImageText(textFromImage);
+                    if (result is List<Receipt>)
+                    {
+                        return Json(result);
+                    }
+                }
             }
             catch (FormatException ex)
             {
@@ -49,21 +58,22 @@ namespace ReceiptlyAPI.Controllers
             {
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
+            return StatusCode(500, $"An error occurred");
         }
-        
-        
-    //  [HttpPost("extractreceiptdata")]
-    // public async Task<IActionResult> ExtractReceiptData([FromForm] IFormFile file)
-    // {
-    //     if (file == null || file.Length == 0)
-    //     {
-    //         return BadRequest("No file uploaded.");
-    //     }
-    //     using var stream = file.OpenReadStream();
-    //     //ToDo 
-    //     //Set up dynamic path to tessdata folder and pass
-    //     await OCRService.ExtractReceiptDataAsync(stream, "");
-    //     return Ok("File processed successfully.");
-    // }     
+
+
+        //  [HttpPost("extractreceiptdata")]
+        // public async Task<IActionResult> ExtractReceiptData([FromForm] IFormFile file)
+        // {
+        //     if (file == null || file.Length == 0)
+        //     {
+        //         return BadRequest("No file uploaded.");
+        //     }
+        //     using var stream = file.OpenReadStream();
+        //     //ToDo 
+        //     //Set up dynamic path to tessdata folder and pass
+        //     await OCRService.ExtractReceiptDataAsync(stream, "");
+        //     return Ok("File processed successfully.");
+        // }     
     }
 }

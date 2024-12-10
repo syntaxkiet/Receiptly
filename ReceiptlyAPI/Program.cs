@@ -1,6 +1,7 @@
 
 using Shared.Interface;
 using Shared.Service.Ocr.Tesseract;
+using Shared.Service.ReceiptParser;
 
 namespace ReceiptlyAPI
 {
@@ -17,6 +18,7 @@ namespace ReceiptlyAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IOCRService, TesseractService>();
+            builder.Services.AddScoped<IReceiptStringParser, ReceiptParser>();
             builder.Services.AddControllers()
                             .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
             //ToDo Add Cors for production environment
