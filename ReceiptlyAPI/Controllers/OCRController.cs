@@ -12,7 +12,6 @@ namespace ReceiptlyAPI.Controllers
         {
             OCRService = oCRService;
         }
-
         public IOCRService OCRService { get; }
 
      [HttpPost("extractreceiptdata")]
@@ -28,5 +27,7 @@ namespace ReceiptlyAPI.Controllers
         await OCRService.ExtractReceiptDataAsync(stream, "");
         return Ok("File processed successfully.");
     }     
+
+
     }
 }
