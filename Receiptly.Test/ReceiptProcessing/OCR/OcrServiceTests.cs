@@ -1,3 +1,4 @@
+using Receiptly.Test.ReceiptProcessing.Resources;
 using Shared.Service;
 using Shared.Service.Ocr.Tesseract;
 
