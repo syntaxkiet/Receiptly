@@ -6,7 +6,7 @@ namespace Shared.Service;
 public class ReceiptMockingService :IReceiptService
 {
     public List<Receipt> GetAllReceipts()
-    {
+        {
         // Return mock data for now
         return MockData.receiptList;
     }

@@ -1,7 +1,7 @@
-using Shared.Sample;
 using Shared.Service;
+using Shared.Service.Ocr.Tesseract;
 
-namespace Receiptly.Test;
+namespace Receiptly.Test.OcrTests;
 
 public class OcrServiceUnitTest1
 {
@@ -13,7 +13,7 @@ public class OcrServiceUnitTest1
         string expectedResult = ExpectedSampleResults.ResultOf20241025T154757;
         //Todo
         //replace hardcoded image path 
-        string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"OcrTests", "Sample", "2024-10-25T15_47_57.jpg");
+        string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OcrTests", "Sample", "2024-10-25T15_47_57.jpg");
         string tessdataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tessdata");
         using var imageStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
 

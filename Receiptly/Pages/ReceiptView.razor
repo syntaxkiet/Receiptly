@@ -1,0 +1,55 @@
+﻿@page "/ReceiptView"
+@if(selectedReceipt == null)
+{
+    @if(receipts.Count <= 0)
+    {
+        <h3>Hämtar kvitton</h3>
+    }
+    else
+    {
+        <ListReceipts ReceiptList="receipts" OnOpenReceipt="HandleReceiptSelected"/>
+    }
+}
+else
+{
+    <ReceiptDisplay receipt="selectedReceipt" OnGoBackPressed="HandleGoBackPressed"/>
+}
+
+@code {
+    [Inject]
+    private IReceiptDalService Dal { get; set; }
+    [Inject]
+    HttpClient httpClient { get; set; }
+    List<Receipt> receipts { get; set; } = new();
+    private Receipt? selectedReceipt { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Dal.GetAllReceiptsAsync(httpClient);
+        if(result is List<Receipt>)
+        {
+            receipts = result;
+        }
+    }
+
+    private async void HandleReceiptSelected(int selectedReceiptId)
+    {
+        selectedReceipt = receipts.FirstOrDefault(r => r.Id == selectedReceiptId);
+        //ToDO setup eager loading of receipt instead of fetching items from id
+        if (selectedReceipt != null)
+        {
+            var itemList = await Dal.GetItemsFromReceiptIdAsync(selectedReceiptId, httpClient);
+            if(itemList is List<Item>)
+            {
+                selectedReceipt.Items = itemList;
+            }
+        }
+        StateHasChanged();
+    }
+
+    private void HandleGoBackPressed()
+    {
+        selectedReceipt = null;
+        StateHasChanged();
+    }  
+}
