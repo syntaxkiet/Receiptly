@@ -11,53 +11,130 @@ namespace Shared.Service.ReceiptParser
 {
     public class ReceiptParser : IReceiptStringParser
     {
-        public Receipt? ParseReceiptFromImageText(string imageText)
+        public ReceiptParseModel ParseModel { get; set; } = new();
+        public List<string> ReceiptLines { get; set; } = new();
+        public string ReceiptText { get; set; } = string.Empty;
+        public Receipt ExtractedReceipt { get; set; } = new();
+
+        public Receipt? ParseReceiptFromImageText(string ReceiptText)
         {
             var receipt = new Receipt();
-            if (string.IsNullOrEmpty(imageText))
+            if (string.IsNullOrEmpty(ReceiptText))
             {
                 return null;
             }
             else
             {
-                var items = ExtractReceiptItems(imageText);
-                if (items != null)
+                ExtractReceiptLines();
+                var ItemsExtracted = ExtractReceiptItems();
+                if (ItemsExtracted)
                 {
-                    receipt.Items = items;
-                    var storeName = ExtractReceiptStore(imageText);
-                    receipt.StoreName = storeName ?? "Unable to extract store name";
-                    var purchaseDate = ExtractPurchaseDate(imageText);
-                    receipt.PurchaseDate = purchaseDate ?? DateTime.MinValue;
+                    ExtractReceiptStore();
+                    ExtractPurchaseDate();
                 }
             }
             return null;
         }
-        protected List<Item>? ExtractReceiptItems(string receiptText)
+
+        protected void ExtractReceiptLines()
         {
-            var items = new List<Item>();
-            string pattern = @"(?<Name>[A-ZÅÄÖa-zåäö\s]+?)\s(?<Quantity>\d*[,\.]?\d+)?\s?[A-Za-z]*\s?(?<UnitPrice>\d+[,\.]?\d+)?\s?(?<TotalPrice>\d+[,\.]?\d+)";
-            var matches = Regex.Matches(receiptText, pattern);
-
-            foreach (Match match in matches)
+            if (!string.IsNullOrEmpty(ReceiptText) && !string.IsNullOrEmpty(ParseModel?.LinePattern))
             {
-                var item = new Item
-                {
-                    Name = match.Groups["Name"].Value.Trim(),
-                };
-                items.Add(item);
-            }
-            if (items.Count > 0)
-            { return items; }
+                ReceiptText = ReceiptText.Replace("\\n", "\n"); // Normalize the text
 
-            else { return null; }
+                var regex = new Regex(ParseModel.LinePattern);
+                ReceiptLines = regex.Split(ReceiptText)
+                    .Where(line => !string.IsNullOrWhiteSpace(line)) // Ignore empty lines
+                    .Select(line => line.Trim())
+                    .ToList();
+            }
         }
 
-        protected string? ExtractReceiptStore(string receiptText)
-        { return null; }
+        protected bool ExtractReceiptItems()
+        {
+            bool itemsExtracted = false;
+            var items = new List<Item>();
+            string pattern = $@"{ParseModel.ItemPattern}";
+            foreach (var line in ReceiptLines)
+            {
+                var match = Regex.Match(line, pattern);
 
-        protected DateTime? ExtractPurchaseDate(string receiptText)
-        { return null; }
+                if (match.Success)
+                {
+                    var item = new Item
+                    {
+                        Name = match.Groups["Name"].Value
+                    };
+                    items.Add(item);
+                    itemsExtracted = true;
+                }
+                ExtractedReceipt.Items = items;
+            }
+            return itemsExtracted;
+        }
 
+        protected void ExtractReceiptStore()
+        {
+            string pattern = $@"{ParseModel.StorePattern}";
+            foreach (var line in ReceiptLines)
+            {
+                var match = Regex.Match(line, pattern);
+
+                if (match.Success)
+                {
+                    ExtractedReceipt.StoreName = match.Groups["StoreName"].Value;
+                }
+            }
+        }
+
+        protected void ExtractPurchaseDate()
+        {
+            string pattern = $@"{ParseModel.PuchaseDatePattern}";
+            foreach (var line in ReceiptLines)
+            {
+                var match = Regex.Match(line, pattern);
+
+                if (match.Success)
+                {
+                    DateTime extractedPurchaseDate;
+                    if (DateTime.TryParse(match.Groups["PurchaseDate"].Value, out extractedPurchaseDate))
+                    {
+                        ExtractedReceipt.PurchaseDate = extractedPurchaseDate;
+                    }
+                }
+            }
+        }
+
+        protected void CombineDualLines()
+        {
+            var patterns = ParseModel.DualLinePatterns;
+            if (ReceiptLines == null || ReceiptLines.Count == 0 || patterns == null || patterns.Count == 0)
+                return;
+
+            var combinedLines = new List<string>();
+            for (int i = 0; i < ReceiptLines.Count; i++)
+            {
+                var line = ReceiptLines[i];
+                bool isCombined = false;
+                if (i + 1 < ReceiptLines.Count)
+                {
+                    foreach (var pattern in patterns)
+                    {
+                        var regex = new Regex(pattern);
+                        if (regex.IsMatch(ReceiptLines[i + 1]))
+                        {
+
+                            line = $"{line} {ReceiptLines[i + 1]}".Trim();
+                            i++; 
+                            isCombined = true;
+                            break;
+                        }
+                    }
+                }
+                combinedLines.Add(line);
+            }
+            ReceiptLines = combinedLines;
+        }
 
     }
 }
