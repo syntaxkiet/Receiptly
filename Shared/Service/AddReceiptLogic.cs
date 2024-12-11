@@ -7,7 +7,7 @@ public class AddReceiptLogic
 {
     
     private readonly IReceiptService _receiptService;
-    public Receipt newReceipt { get; private set; }
+    public Receipt newReceipt { get; set; }
 
     public AddReceiptLogic(IReceiptService receiptService)
     {
@@ -19,6 +19,16 @@ public class AddReceiptLogic
             Items = new List<Item>()
         };
     }
+    public void LoadReceipt(int receiptId)
+    {
+        var receipt = _receiptService.GetReceiptById(receiptId);
+        if (receipt != null)
+        {
+            newReceipt = receipt;
+        }
+    }
+
+
 
     public async Task SaveReceiptAsync()
     {
