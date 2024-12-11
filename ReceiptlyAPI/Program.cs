@@ -1,5 +1,7 @@
 
+using ReceiptlyAPI.Controllers;
 using Shared.Interface;
+using Shared.Models;
 using Shared.Service;
 
 namespace ReceiptlyAPI
@@ -11,12 +13,19 @@ namespace ReceiptlyAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            
+            builder.Services.AddScoped<IReceiptService, ReceiptMockingService>();
+            builder.Services.AddScoped<List<Receipt>>(provider =>
+            {
+                var receiptService = provider.GetRequiredService<IReceiptService>();
+                return receiptService.GetAllReceipts() ?? new List<Receipt>();
+            });
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IOCRService, TesseractService>();
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", policy =>
