@@ -28,6 +28,7 @@
 
 
     <ItemGroup>
+      <ProjectReference Include="..\ReceiptlyAPI\ReceiptlyAPI.csproj" />
       <ProjectReference Include="..\Receiptly\Receiptly.csproj" />
       <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
