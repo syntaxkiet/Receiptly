@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices.JavaScript;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Interface;
+using Shared.Service;
 
 namespace ReceiptlyAPI.Controllers
 {
@@ -9,17 +11,16 @@ namespace ReceiptlyAPI.Controllers
     {
         private List<Shared.Models.Receipt> receiptList;
 
-        public NotificationsController()
+        public NotificationsController(List<Shared.Models.Receipt> receiptList)
         {
-            receiptList = Shared.Models.MockData.receiptList;
+            this.receiptList = receiptList;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetNotifications(CancellationToken cancellationToken)
         {
             var startTime = DateTime.Now;
-            
-            
+
             while (!cancellationToken.IsCancellationRequested)
             {
                 var now = DateTime.Now;
