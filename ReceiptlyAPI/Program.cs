@@ -9,6 +9,7 @@ using ReceiptlyAPI.Data;
 using Shared.Models;
 using Receiptly;
 using ReceiptlyAPI.Services;
+using Shared.Service;
 using Shared.Service.Ocr.Tesseract;
 namespace ReceiptlyAPI
 {
@@ -19,6 +20,12 @@ namespace ReceiptlyAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped<IReceiptService, ReceiptMockingService>();
+            builder.Services.AddScoped<List<Receipt>>(provider =>
+            {
+                var receiptService = provider.GetRequiredService<IReceiptService>();
+                return receiptService.GetAllReceipts() ?? new List<Receipt>();
+            });
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
             builder.Services.AddDbContext<ReceiptlyDbContext>();
@@ -66,12 +73,11 @@ namespace ReceiptlyAPI
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
 
-            using (var scope = app.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<ReceiptlyDbContext>();
-                context.Database.Migrate();
-            }
-
+            // using (var scope = app.Services.CreateScope())
+            // {
+            //     var context = scope.ServiceProvider.GetRequiredService<ReceiptlyDbContext>();
+            //     context.Database.Migrate();
+            // }
 
             app.Run();
         }
