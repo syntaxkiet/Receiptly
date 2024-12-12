@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Shared.Enum.Components.Home
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Receiptly</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -26,11 +28,10 @@
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Notification Client
             </NavLink>
         </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="receiptupload">
+        <div>
+            <button class="nav-link" @onclick="() => OnNavigationAction.InvokeAsync(NavigationAction.UploadReceipt)">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Receipt Upload
-            </NavLink>
+            </button>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="receipts">
@@ -52,8 +53,11 @@
 
 @code {
     private bool collapseNavMenu = true;
-
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    @code {
+        [Parameter] public EventCallback<NavigationAction> OnNavigationAction { get; set; }
+    }
 
     private void ToggleNavMenu()
     {
