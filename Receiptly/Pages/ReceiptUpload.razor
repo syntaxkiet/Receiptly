@@ -5,19 +5,20 @@
 }
 else
 {
-    <AddReceiptComponent OnSaveReceipt="HandleSaveButtonPressed"/>
+    <AddReceiptComponent editReceipt="@scannedReceipt" OnSaveReceipt="HandleSaveButtonPressed"/>
 }
 @code {
     [Inject]
     public HttpClient client { get; set; } = new();
     [Inject]
     public required IReceiptDalService DalService { get; set; }
-    private Receipt scannedReceipt { get; set; } = new();
+    public Receipt scannedReceipt { get; set; } = new();
     private bool UploadModeActive { get; set; } = true;
     private void HandleSuccessfulUpload(Receipt uploadedReceipt)
     {
         scannedReceipt = uploadedReceipt;
         UploadModeActive = false;
+        StateHasChanged();
     }
     private async Task HandleSaveButtonPressed()
     {

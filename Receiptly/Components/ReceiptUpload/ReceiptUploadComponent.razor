@@ -24,7 +24,7 @@ else
     [Parameter]
     public EventCallback<Receipt> OnSuccessfulUpload { get; set; }
     private bool displayUploadUi { get; set; } = true;
-    private bool displayFailMessage { get; set; } = true;
+    private bool displayFailMessage { get; set; } = false;
     public async Task HandleUploadedReceipt(IBrowserFile selectedFile)
     {
         displayUploadUi = false;
