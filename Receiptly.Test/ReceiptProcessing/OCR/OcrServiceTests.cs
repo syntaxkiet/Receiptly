@@ -2,7 +2,7 @@ using Receiptly.Test.ReceiptProcessing.Resources;
 using Shared.Service;
 using Shared.Service.Ocr.Tesseract;
 
-namespace Receiptly.Test.OcrTests;
+namespace Receiptly.Test.ReceiptProcessing.OCR;
 
 public class OcrServiceTests
 {
@@ -11,11 +11,12 @@ public class OcrServiceTests
     {
         // Arrange
         var sut = new TesseractService();
-        string expectedResult = TestResourceHelper.OcrResultOfReceiptSample1;
+        string expectedResult = ReceiptProcessingTestResourceHelper.OcrResultOfReceiptSample1.Replace("\\n", "\n");
+
         //Todo
         //replace hardcoded image path 
-        string imagePath = TestResourceHelper.ReceiptSample1Path;
-        string tessdataPath = TestResourceHelper.TessDataPath;
+        string imagePath = ReceiptProcessingTestResourceHelper.ReceiptSample1Path;
+        string tessdataPath = ReceiptProcessingTestResourceHelper.TessDataPath;
         using var imageStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
 
         // Act
