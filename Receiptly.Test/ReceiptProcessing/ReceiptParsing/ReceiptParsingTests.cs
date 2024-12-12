@@ -11,9 +11,13 @@ namespace Receiptly.Test.ReceiptProcessing.Tests
     public class TestableReceiptParser : ReceiptParser
     {
         public new void ExtractReceiptLines() => base.ExtractReceiptLines();
-        public new bool ExtractReceiptItems() => base.ExtractReceiptItems();
+        public new void ExtractReceiptItemLines() => base.ExtractReceiptItemLines();
         public new void ExtractPurchaseDate() => base.ExtractPurchaseDate();
         public new void CombineDualLines() => base.CombineDualLines();
+        public new void CombineAndInsertKeyBeforeValue() => base.CombineAndInsertKeyBeforeValue();
+        public new void ExtractReceiptStore() => base.ExtractReceiptStore();
+        public new void RemoveNonItemLines() => base.RemoveNonItemLines();
+        public new void ExtractReceiptItems() => base.ExtractReceiptItems();
     }
 
     public class ReceiptParserTests
@@ -23,15 +27,10 @@ namespace Receiptly.Test.ReceiptProcessing.Tests
         {
             // Arrange
             var receiptText = ReceiptProcessingTestResourceHelper.OcrResultOfReceiptSample1;
-            var parser = new TestableReceiptParser()
-            {
-                ParseModel = ReceiptPatterns.TestModel
-                ,
-                ReceiptText = $@"{receiptText}"
-            };
+            var parser = new TestableReceiptParser();
 
             // Act
-            var receipt = parser.ParseReceiptFromImageText(receiptText);
+            var receipt = parser.ParseReceiptFromImageText(receiptText, ReceiptProcessingTestResourceHelper.TestModel);
 
             // Assert
             Assert.NotNull(receipt);
@@ -40,14 +39,13 @@ namespace Receiptly.Test.ReceiptProcessing.Tests
         }
 
         [Fact]
-        public void ExtractReceiptLines_SplitsTextIntoLines_Correctly()
+        public void ExtractReceiptLinesSplitsTextIntoLinesCorrectly()
         {
             // Arrange
             var receiptText = ReceiptProcessingTestResourceHelper.OcrResultOfReceiptSample1;
             var parser = new TestableReceiptParser()
             {
-                ParseModel = ReceiptPatterns.TestModel
-                ,
+                ParseModel = ReceiptPatterns.TestModel,
                 ReceiptText = $@"{receiptText}"
             };
 
@@ -59,28 +57,66 @@ namespace Receiptly.Test.ReceiptProcessing.Tests
         }
 
         [Fact]
-        public void ExtractReceiptItems_ParsesItems_Correctly()
+        public void ExtractReceiptItemLinesParsesItemsCorrectly()
         {
             // Arrange
             var receiptText = ReceiptProcessingTestResourceHelper.OcrResultOfReceiptSample1;
             var parser = new TestableReceiptParser()
             {
-                ParseModel = ReceiptPatterns.TestModel
-                ,
+                ParseModel = ReceiptPatterns.TestModel,
                 ReceiptText = $@"{receiptText}"
             };
             parser.ExtractReceiptLines();
 
             // Act
-            var itemsExtracted = parser.ExtractReceiptItems();
+            parser.ExtractReceiptItemLines();
 
             // Assert
-            Assert.True(itemsExtracted);
-            Assert.NotNull(parser.ExtractedReceipt);
+
+            Assert.Equal(parser.ExtractedReceipt.Items.Count, ReceiptProcessingTestResourceHelper.ExpectedCountOfEctractReceiptItemlines);
         }
 
         [Fact]
-        public void ExtractReceiptStore_DetectsStoreName_Correctly()
+        public void ExtractReceiptItemLinesParsesItemLinesCorrectly()
+        {
+            // Arrange
+            var receiptText = ReceiptProcessingTestResourceHelper.OcrResultOfReceiptSample1;
+            var parser = new TestableReceiptParser()
+            {
+                ParseModel = ReceiptPatterns.TestModel,
+                ReceiptText = $@"{receiptText}"
+            };
+            parser.ExtractReceiptLines();
+
+            // Act
+            parser.ExtractReceiptItems();
+
+            // Assert
+
+            Assert.Equal(parser.ExtractedReceipt.Items.Count, ReceiptProcessingTestResourceHelper.ExpectedCountOfEctractReceiptItemlines);
+        }
+
+        [Fact]
+        public void ExtractReceiptStoreDetectsStoreNameCorrectly()
+        {
+            // Arrange
+            var receiptText = ReceiptProcessingTestResourceHelper.OcrResultOfReceiptSample1;
+            var parser = new TestableReceiptParser()
+            {
+                ParseModel = ReceiptProcessingTestResourceHelper.TestModel,
+                ReceiptText = $@"{receiptText}"
+            };
+            parser.ExtractReceiptLines();
+
+            // Act
+            parser.ExtractReceiptStore();
+
+            // Assert
+            Assert.Equal(ReceiptProcessingTestResourceHelper.ExpectedResultOfExtractReceiptStoreDetectsStoreNameCorrectly, parser.ExtractedReceipt.StoreName);
+        }
+
+        [Fact]
+        public void ExtractPurchaseDateParsesDateCorrectly()
         {
             // Arrange
             var receiptText = ReceiptProcessingTestResourceHelper.OcrResultOfReceiptSample1;
@@ -96,27 +132,7 @@ namespace Receiptly.Test.ReceiptProcessing.Tests
             parser.ExtractPurchaseDate();
 
             // Assert
-            Assert.Equal(new DateTime(2024, 10, 25, 15, 47, 55), parser.ExtractedReceipt.PurchaseDate);
-        }
-
-        [Fact]
-        public void ExtractPurchaseDate_ParsesDate_Correctly()
-        {
-            // Arrange
-            var receiptText = ReceiptProcessingTestResourceHelper.OcrResultOfReceiptSample1;
-            var parser = new TestableReceiptParser()
-            {
-                ParseModel = ReceiptPatterns.TestModel
-                ,
-                ReceiptText = $@"{receiptText}"
-            };
-            parser.ExtractReceiptLines();
-
-            // Act
-            parser.ExtractPurchaseDate();
-
-            // Assert
-            Assert.Equal(new DateTime(2024, 10, 25, 15, 47, 55), parser.ExtractedReceipt.PurchaseDate);
+            Assert.Equal(ReceiptProcessingTestResourceHelper.ExpetedResultOfExtractPurchaseDateParsesDateCorrectl, parser.ExtractedReceipt.PurchaseDate);
         }
 
         [Fact]
@@ -134,6 +150,47 @@ namespace Receiptly.Test.ReceiptProcessing.Tests
             parser.CombineDualLines();
 
             Assert.Equal(ReceiptProcessingTestResourceHelper.ExpectedSeparatedCombinedStringsList, parser.ReceiptLines);
+        }
+
+        [Fact]
+        public void CombineAndInsertKeyBeforeValue_ShouldCombineAndReorderLines()
+        {
+            // Arrange
+            var parser = new TestableReceiptParser();
+            parser.ParseModel = ReceiptProcessingTestResourceHelper.TestModel;
+            parser.ReceiptText = ReceiptProcessingTestResourceHelper.OcrResultOfReceiptSample1;
+            parser.ExtractReceiptLines();
+
+            // Act
+
+            parser.CombineAndInsertKeyBeforeValue();
+
+            // Assert
+            var expectedLines = ReceiptProcessingTestResourceHelper.ExpectedOutcomeOfCombineAndInsertKeyBeforeValue;
+
+            Assert.Equal(expectedLines, parser.ReceiptLines);
+        }
+        [Fact]
+        public void RemoveNonItemLinesRemovesExpectedLines()
+        {
+            // Arrange
+            var parser = new TestableReceiptParser();
+            parser.ParseModel = ReceiptProcessingTestResourceHelper.TestModel;
+            parser.ReceiptText = ReceiptProcessingTestResourceHelper.OcrResultOfReceiptSample1;
+            parser.ExtractReceiptLines();
+            parser.CombineAndInsertKeyBeforeValue();
+            parser.CombineDualLines();
+            parser.ExtractReceiptItemLines();
+            parser.RemoveNonItemLines();
+
+            // Act
+
+            parser.CombineAndInsertKeyBeforeValue();
+
+            // Assert
+            var expectedLines = ReceiptProcessingTestResourceHelper.ExpectedCountOfItemlinesAterREmoveNonItemLines;
+
+            Assert.Equal(expectedLines, parser.ItemLines.Count);
         }
     }
 }

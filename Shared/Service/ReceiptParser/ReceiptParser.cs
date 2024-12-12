@@ -13,12 +13,14 @@ namespace Shared.Service.ReceiptParser
     {
         public ReceiptParseModel ParseModel { get; set; } = new();
         public List<string> ReceiptLines { get; set; } = new();
+        public List<string> ItemLines { get; set; } = new();
         public string ReceiptText { get; set; } = string.Empty;
         public Receipt ExtractedReceipt { get; set; } = new();
 
-        public Receipt? ParseReceiptFromImageText(string ReceiptText)
+        public Receipt? ParseReceiptFromImageText(string receiptText, ReceiptParseModel model)
         {
-            var receipt = new Receipt();
+            ParseModel = model;
+            ReceiptText = $@"{receiptText}";
             if (string.IsNullOrEmpty(ReceiptText))
             {
                 return null;
@@ -26,23 +28,29 @@ namespace Shared.Service.ReceiptParser
             else
             {
                 ExtractReceiptLines();
-                var ItemsExtracted = ExtractReceiptItems();
-                if (ItemsExtracted)
+                ExtractReceiptItemLines();
+                RemoveNonItemLines();
+                CombineAndInsertKeyBeforeValue();
+                CombineDualLines();
+                ExtractReceiptItems();
+                if (ItemLines.Count > 0)
                 {
                     ExtractReceiptStore();
                     ExtractPurchaseDate();
+                    return ExtractedReceipt;
                 }
+                else
+                    return null;
             }
-            return null;
         }
 
         protected void ExtractReceiptLines()
         {
-            if (!string.IsNullOrEmpty(ReceiptText) && !string.IsNullOrEmpty(ParseModel?.LinePattern))
+            if (!string.IsNullOrEmpty(ReceiptText) && !string.IsNullOrEmpty(ParseModel?.LineSeparatorPattern))
             {
                 ReceiptText = ReceiptText.Replace("\\n", "\n"); // Normalize the text
 
-                var regex = new Regex(ParseModel.LinePattern);
+                var regex = new Regex(ParseModel.LineSeparatorPattern);
                 ReceiptLines = regex.Split(ReceiptText)
                     .Where(line => !string.IsNullOrWhiteSpace(line)) // Ignore empty lines
                     .Select(line => line.Trim())
@@ -50,29 +58,54 @@ namespace Shared.Service.ReceiptParser
             }
         }
 
-        protected bool ExtractReceiptItems()
+        protected void ExtractReceiptItemLines()
         {
-            bool itemsExtracted = false;
-            var items = new List<Item>();
-            string pattern = $@"{ParseModel.ItemPattern}";
+            string pattern = $@"{ParseModel.ItemLinePattern}";
             foreach (var line in ReceiptLines)
             {
                 var match = Regex.Match(line, pattern);
-
                 if (match.Success)
                 {
-                    var item = new Item
-                    {
-                        Name = match.Groups["Name"].Value
-                    };
-                    items.Add(item);
-                    itemsExtracted = true;
+                    ItemLines.Add(line);
                 }
-                ExtractedReceipt.Items = items;
             }
-            return itemsExtracted;
         }
 
+        protected void RemoveNonItemLines()
+        {
+            var patterns = ParseModel.ExcludeLineFromItems;
+            List<string> removeIndexes = new List<string>();
+            foreach (var pattern in patterns)
+            {
+                for (var i = 0; i < ItemLines.Count - 1; i++)
+                {
+                    var line = ItemLines[i];
+                    var match = Regex.Match(line, pattern);
+                    if (match.Success)
+                    {
+                        removeIndexes.Add(line);
+                    }
+                }
+            }
+            foreach (var line in removeIndexes)
+            {
+                ItemLines.Remove(line);
+            }
+        }
+
+        protected void ExtractReceiptItems()
+        {
+            //ToDO add logic to separate price, ammount and total
+            RemoveNonItemLines();
+            foreach (string line in ItemLines)
+            {
+                ExtractedReceipt.Items.Add(new Item() { Name = line });
+            }
+        }
+
+        /// <summary>
+        /// Matches on first occurence of ParseModel.StorePattern, saves whole line as Receipt.StoreName and breaks
+        /// </summary>
         protected void ExtractReceiptStore()
         {
             string pattern = $@"{ParseModel.StorePattern}";
@@ -82,7 +115,8 @@ namespace Shared.Service.ReceiptParser
 
                 if (match.Success)
                 {
-                    ExtractedReceipt.StoreName = match.Groups["StoreName"].Value;
+                    ExtractedReceipt.StoreName = line;
+                    break;
                 }
             }
         }
@@ -120,12 +154,12 @@ namespace Shared.Service.ReceiptParser
                 {
                     foreach (var pattern in patterns)
                     {
-                        var regex = new Regex(pattern);
+                        var regex = new Regex(pattern.Replace("//", "/"));
                         if (regex.IsMatch(ReceiptLines[i + 1]))
                         {
 
                             line = $"{line} {ReceiptLines[i + 1]}".Trim();
-                            i++; 
+                            i++;
                             isCombined = true;
                             break;
                         }
@@ -134,6 +168,35 @@ namespace Shared.Service.ReceiptParser
                 combinedLines.Add(line);
             }
             ReceiptLines = combinedLines;
+        }
+
+        public void CombineAndInsertKeyBeforeValue()
+        {
+            if (ReceiptLines == null || ReceiptLines.Count == 0 || ParseModel.TriggersAtNextIndexInsertsBeforeOnCurrentIndex == null || ParseModel.TriggersAtNextIndexInsertsBeforeOnCurrentIndex.Count == 0)
+                return;
+            var updatedLines = new List<string>();
+            for (int i = 0; i < ReceiptLines.Count; i++)
+            {
+                var line = ReceiptLines[i];
+
+                foreach (var rule in ParseModel.TriggersAtNextIndexInsertsBeforeOnCurrentIndex)
+                {
+                    var triggerRegex = new Regex(rule.Key);
+                    var insertRegex = new Regex(rule.Value);
+
+                    if (i + 1 < ReceiptLines.Count && triggerRegex.IsMatch(ReceiptLines[i + 1]))
+                    {
+                        var matchedPart = insertRegex.Match(line).Value;
+                        line = insertRegex.Replace(line, "").Trim();
+                        line = $"{line} {ReceiptLines[i + 1]} {matchedPart}".Trim();
+                        i++;
+                        break;
+                    }
+                }
+
+                updatedLines.Add(line);
+            }
+            ReceiptLines = updatedLines;
         }
 
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.Interface;
 using Shared.Models;
 using Shared.Service;
+using Shared.Service.ReceiptParser;
 namespace ReceiptlyAPI.Controllers
 {
     [ApiController]
@@ -26,7 +27,7 @@ namespace ReceiptlyAPI.Controllers
         }
 
         [HttpPost("extractreceiptdata")]
-        public async Task<IActionResult> ExtractReceiptData([FromBody] ReceiptDataRequest request)
+        public async Task<ActionResult<Receipt>> ExtractReceiptData([FromBody] ReceiptDataRequest request)
         {
             if (request == null || string.IsNullOrWhiteSpace(request.FileContent))
             {
@@ -43,8 +44,9 @@ namespace ReceiptlyAPI.Controllers
                 var textFromImage = await OCRService.ExtractReceiptDataAsync(stream, "Shared\\Service\\Ocr\\Tesseract\\");
                 if (textFromImage != null)
                 {
-                    var result = ReceiptStringParser.ParseReceiptFromImageText(textFromImage);
-                    if (result is List<Receipt>)
+                    //ToDo Set up fetching models from db and load to list of models
+                    var result = ReceiptStringParser.ParseReceiptFromImageText(textFromImage, ReceiptPatterns.TestModel);
+                    if (result is Receipt)
                     {
                         return Json(result);
                     }

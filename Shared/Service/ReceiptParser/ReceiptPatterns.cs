@@ -15,20 +15,22 @@ namespace Shared.Service.ReceiptParser
         public static ReceiptParseModel TestModel { get; } = new ReceiptParseModel()
         {
             Name = "Hemköp Kungsgatan Eskilstuna",
-            ItemPattern = @"(?<Name>.+?)\s+\d{1,3}(?:[,.]\d{2})\s*(kr|)?$",
+            ItemLinePattern = @"(?<Name>.+?)\s+\d{1,3}(?:[,.]\d{2})\s*(kr|)?$",
             StorePattern = "Hemköp",
-            LinePattern = @"\n", 
+            LineSeparatorPattern = @"\n", 
             PuchaseDatePattern = @"(?<PurchaseDate>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})",
-            DualLinePatterns = new List<string>(){@"Pant", @"\d{1,3}[,.]\d{2}/kg"}      
+            DualLinePatterns = new List<string>(){@"\+PANT", @"\d{1,3}[,]\d{2}/kg", @"\d{1,3},\s?\d{2}kr/\w{1,3}" },
+            ExcludeLineFromItems = new List<string>(){}
+                    
         };
         public static List<ReceiptParseModel> ParseModels { get; set; } = new()
         {
             new ReceiptParseModel()
             {
                 Name = "Hemköp Kungsgatan Eskilstuna",
-                ItemPattern = @"(?<Name>.+?)\s+\d{1,3}(?:[,.]\d{2})\s*(kr|)?$\r\n",
+                ItemLinePattern = @"(?<Name>.+?)\s+\d{1,3}(?:[,.]\d{2})\s*(kr|)?$\r\n",
                 StorePattern = "Hemköp",
-                LinePattern = "/n",
+                LineSeparatorPattern = "/n",
                 PuchaseDatePattern = @"(?<PurchaseDate>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}"
             }
         };

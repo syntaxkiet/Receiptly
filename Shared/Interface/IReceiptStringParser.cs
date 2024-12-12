@@ -14,6 +14,6 @@ namespace Shared.Interface
         public List<string> ReceiptLines { get; set; }
         public Receipt ExtractedReceipt { get; set; } 
         public ReceiptParseModel ParseModel { get; set; }
-        Receipt? ParseReceiptFromImageText(string ReceiptText);
+        Receipt? ParseReceiptFromImageText(string ReceiptText, ReceiptParseModel model);
     }
 }

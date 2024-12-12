@@ -15,7 +15,7 @@
     HttpClient Http { get; set; }
 
     private string extractionResult { get; set; } = "";
-    
+
     public async Task HandleUploadedReceipt(IBrowserFile selectedFile)
     {
         try
@@ -40,7 +40,9 @@
 
             if (response.IsSuccessStatusCode)
             {
-                // Handle success
+                var receipt = await response.Content.ReadFromJsonAsync<Receipt>();
+                if (receipt is Receipt)
+                Console.WriteLine("receipt is Receipt");
             }
             else
             {
