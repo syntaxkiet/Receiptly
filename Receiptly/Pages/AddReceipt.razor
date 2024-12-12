@@ -1,29 +1,19 @@
 @page "/AddReceipt"
-@using System.Net
-@inject IReceiptDalService ReceiptDalService
-@inject HttpClient HttpClient
+@inject IReceiptService ReceiptService
 @inject NavigationManager Navigation
 @inject AddReceiptLogic Logic
 
-
-<div class="container p-0 ms-0">
-    <div class="row">
-        <div class="col-6">
-            <div class="form-group">
-                <label for="select-receipt">Välj kvitto/Skapa kvitto</label>
-                <select id="select-receipt" class="form-control" @onchange="LoadSelectedReceipt">
-                    <option value="">Nytt kvitto </option>
-                    @foreach (var receipt in ReceiptList)
-                    {
-                        <option value="@receipt.Id">@receipt.StoreName - @receipt.PurchaseDate.ToShortDateString()</option>
-                    }
-                </select>
-            </div>
-        </div>
-        <div class="col-2 ms-3 align-self-end p-0">
-            <button class="btn btn-primary mb-0" @onclick="UploadReceipt">Ladda upp ett kvitto<InputFile></InputFile></button>
-        </div>
-    </div>
+<h3>Hantera Kvitto</h3>
+<!-- Choose a receipt  -->
+<div class="form-group">
+    <label for="select-receipt">Välj kvitto/Skapa kvitto</label>
+    <select id="select-receipt" class="form-control" @onchange="LoadSelectedReceipt">
+        <option value="">Nytt kvitto </option>
+        @foreach (var receipt in ReceiptList)
+        {
+            <option value="@receipt.Id">@receipt.StoreName - @receipt.PurchaseDate.ToShortDateString()</option>
+        }
+    </select>
 </div>
 <ReceiptDetailsForm Receipt="Logic.newReceipt" />
 
@@ -53,74 +43,49 @@
 
 <!-- Save receipt-->
 <button class="btn btn-success" @onclick="SaveReceipt">Spara kvitto</button>
-@if(uploadFileModeActive)
-{
-    <FileUpload OnFileUploaded="HandleUploadedReceipt" />
-}
+
 
 
 @code {
-    private IBrowserFile? uploadedFile { get; set; }
-    private bool uploadFileModeActive { get; set; } = false;
+
     private List<Receipt> ReceiptList { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        try
-        {
-            // HGets list via ReceiptDalService
-            var receipts = await ReceiptDalService.GetAllReceiptsAsync(HttpClient);
-            ReceiptList = receipts ?? new List<Receipt>();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Ett fel inträffade vid hämtning av kvitton: {ex.Message}");
-        }
+        // Get the Mockdata
+        ReceiptList = ReceiptService.GetAllReceipts();
+
     }
 
-    private async Task LoadSelectedReceipt(ChangeEventArgs e)
+    private void LoadSelectedReceipt(ChangeEventArgs e)
     {
         if (int.TryParse(e.Value?.ToString(), out var receiptId) && receiptId > 0)
         {
-            try
-            {
-                var receipt = await ReceiptDalService.GetReceiptByIdAsync(receiptId, HttpClient);
-                if (receipt != null)
-                {
-                    Logic.LoadReceipt(receiptId);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ett fel inträffade vid laddning av kvitto: {ex.Message}");
-            }
+            Logic.LoadReceipt(receiptId);
         }
         else
         {
             Logic.newReceipt = new Receipt();
         }
     }
-
     private async Task SaveReceipt()
     {
+        // Kontrollera att varje artikel har en giltig kvantitet
+        if (Logic.newReceipt.Items.Any(item => item.Quantity < 1))
+        {
+            Console.WriteLine("Alla artiklar måste ha en kvantitet större än eller lika med 1.");
+            return;
+        }
+
         try
         {
-            if (Logic.newReceipt.Id == 0)
-            {
-                // Skapa nytt kvitto
-                await ReceiptDalService.CreateReceiptsAsync(new List<Receipt> { Logic.newReceipt }, HttpClient);
-            }
-            else
-            {
-                // Uppdatera befintligt kvitto
-                await ReceiptDalService.UpdateReceiptsAsync(new List<Receipt> { Logic.newReceipt }, HttpClient);
-            }
+            await Logic.SaveReceiptAsync();
             Console.WriteLine("Kvitto sparat!");
             Navigation.NavigateTo("/receipts");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Fel vid sparande av kvitto: {ex.Message}");
+            Console.WriteLine($"Ett fel inträffade: {ex.Message}");
         }
     }
 
@@ -136,13 +101,5 @@
         Logic.RemoveItem(item);
     }
 
-    private void UploadReceipt()
-    {
-        uploadFileModeActive = true;
-        StateHasChanged();
-    }
-    private void HandleUploadedReceipt(IBrowserFile uploadedFile)
-    {
-  
-    }
+
 }

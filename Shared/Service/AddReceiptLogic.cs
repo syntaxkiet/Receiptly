@@ -5,7 +5,7 @@ namespace Shared.Service;
 
 public class AddReceiptLogic
 {
-    
+
     private readonly IReceiptService _receiptService;
     public Receipt newReceipt { get; set; }
 
@@ -29,7 +29,6 @@ public class AddReceiptLogic
     }
 
 
-
     public async Task SaveReceiptAsync()
     {
         if (string.IsNullOrWhiteSpace(newReceipt.StoreName))
@@ -46,6 +45,6 @@ public class AddReceiptLogic
     }
     public void RemoveItem(Item item)
     {
-        newReceipt.Items.Remove(item);  
+        newReceipt.Items.Remove(item);
     }
 }
