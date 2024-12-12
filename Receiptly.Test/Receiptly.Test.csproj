@@ -14,13 +14,16 @@
         <PackageReference Include="coverlet.collector" Version="6.0.0"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
         <PackageReference Include="Moq" Version="4.20.72" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="System.Net.Http" Version="4.3.4" />
+        <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
         <PackageReference Include="tesseract" Version="5.2.0" />
-        <PackageReference Include="xunit" Version="2.5.3"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
+        <PackageReference Include="xunit" Version="2.5.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit"/>
+        <Using Include="Xunit" />
     </ItemGroup>
 
 
@@ -31,8 +34,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="OcrTests\Sample\2024-10-25T15_47_57.jpg">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <None Update="ReceiptProcessing\Resources\ReceiptSample1.jpg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="tessdata\eng.traineddata">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -40,10 +43,6 @@
         <None Update="tessdata\swe.traineddata">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="bin\Debug\net8.0\" />
     </ItemGroup>
     
 

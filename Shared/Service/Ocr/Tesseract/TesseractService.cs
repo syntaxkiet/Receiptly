@@ -10,7 +10,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace Shared.Service
+namespace Shared.Service.Ocr.Tesseract
 {
     public class TesseractService : IOCRService
     {
@@ -57,7 +57,7 @@ namespace Shared.Service
             if (!Directory.Exists(tessDataPath))
                 throw new DirectoryNotFoundException($"Tessdata path not found: {tessDataPath}");
         }
-        
+
         private async Task<Pix> ConvertStreamToPixAsync(Stream fileStream)
         {
             using var image = await Image.LoadAsync<Rgba32>(fileStream);
@@ -67,18 +67,18 @@ namespace Shared.Service
 
             return Pix.LoadFromMemory(ms.ToArray());
         }
-        
+
         private TesseractEngine InitializeTesseractEngine(string tessDataPath)
         {
             return new TesseractEngine(tessDataPath, "swe", EngineMode.Default);
         }
-        
+
         private string PerformOcr(TesseractEngine engine, Pix pix, string languageSetting)
         {
             using var page = engine.Process(pix);
             return page.GetText();
         }
-        
+
         public string NormalizeLineBreaks(string input)
         {
             return input.Replace("\n", "\r\n");
