@@ -45,7 +45,7 @@ public class AddReceiptTests
         //Act
         sut.AddItem();
         //Assert
-        Assert.Equal(1,sut.newReceipt.Items.Count);
+        Assert.Single(sut.newReceipt.Items);
     }
 
     [Fact]

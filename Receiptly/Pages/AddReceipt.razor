@@ -3,7 +3,18 @@
 @inject NavigationManager Navigation
 @inject AddReceiptLogic Logic
 
-<h3>Lägg till kvitto</h3>
+<h3>Hantera Kvitto</h3>
+<!-- Choose a receipt  -->
+<div class="form-group">
+    <label for="select-receipt">Välj kvitto/Skapa kvitto</label>
+    <select id="select-receipt" class="form-control" @onchange="LoadSelectedReceipt">
+        <option value="">Nytt kvitto </option>
+        @foreach (var receipt in ReceiptList)
+        {
+        <option value="@receipt.Id">@receipt.StoreName - @receipt.PurchaseDate.ToShortDateString()</option>
+        }
+    </select>
+</div>
 <ReceiptDetailsForm Receipt="Logic.newReceipt" />
 
 <!-- Form to add new items -->
@@ -36,14 +47,41 @@
 
 
 @code {
-    
+
+    private List<Receipt> ReceiptList { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        // Get the Mockdata
+        ReceiptList = ReceiptService.GetAllReceipts();
+
+    }
+
+    private void LoadSelectedReceipt(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var receiptId) && receiptId > 0)
+        {
+             Logic.LoadReceipt(receiptId);
+        }
+        else
+        {
+            Logic.newReceipt = new Receipt();
+        }
+    }
     private async Task SaveReceipt()
     {
+        // Kontrollera att varje artikel har en giltig kvantitet
+        if (Logic.newReceipt.Items.Any(item => item.Quantity < 1))
+        {
+            Console.WriteLine("Alla artiklar måste ha en kvantitet större än eller lika med 1.");
+            return;
+        }
+
         try
         {
             await Logic.SaveReceiptAsync();
             Console.WriteLine("Kvitto sparat!");
-            Navigation.NavigateTo("/receipts"); // Navigate to Receipts
+            Navigation.NavigateTo("/receipts");
         }
         catch (Exception ex)
         {
