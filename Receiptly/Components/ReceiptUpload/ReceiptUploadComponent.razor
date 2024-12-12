@@ -20,17 +20,19 @@ else
 }
 @code {
     [Inject]
-    HttpClient Http { get; set; } = new();
+    HttpClient Client { get; set; } = new();
     [Parameter]
     public EventCallback<Receipt> OnSuccessfulUpload { get; set; }
     private bool displayUploadUi { get; set; } = true;
     private bool displayFailMessage { get; set; } = true;
     public async Task HandleUploadedReceipt(IBrowserFile selectedFile)
     {
+        displayUploadUi = false;
+        StateHasChanged();
         try
         {
             // Read the file as a stream
-            using var stream = selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB limit
+            await using var stream = selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB limit
             using var memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream);
 
@@ -45,7 +47,7 @@ else
 
             // Send the JSON payload to the server
             var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-            var response = await Http.PostAsync("ocr/extractreceiptdata", httpContent);
+            var response = await Client.PostAsync("ocr/extractreceiptdata", httpContent);
 
             if (response.IsSuccessStatusCode)
             {
