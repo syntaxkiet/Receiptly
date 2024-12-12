@@ -32,6 +32,7 @@ namespace Shared.Service
             }
             return null;
         }
+
         public async Task<Receipt?> GetReceiptByIdAsync(int id, HttpClient http)
         {
             var response = await http.GetAsync($"dal/getreceiptbyid/{id}");
@@ -41,7 +42,6 @@ namespace Shared.Service
             }
             return null;
         }
-
 
         public async Task CreateReceiptsAsync(List<Receipt> receipts, HttpClient http)
         {

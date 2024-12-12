@@ -2,7 +2,7 @@ using Receiptly.Test.ReceiptProcessing.Resources;
 using Shared.Service;
 using Shared.Service.Ocr.Tesseract;
 
-namespace Receiptly.Test.OcrTests;
+namespace Receiptly.Test.ReceiptProcessing.OCR;
 
 public class OcrServiceTests
 {

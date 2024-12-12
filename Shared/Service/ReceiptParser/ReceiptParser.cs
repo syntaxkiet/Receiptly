@@ -2,6 +2,7 @@
 using Shared.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -16,6 +17,7 @@ namespace Shared.Service.ReceiptParser
         public List<string> ItemLines { get; set; } = new();
         public string ReceiptText { get; set; } = string.Empty;
         public Receipt ExtractedReceipt { get; set; } = new();
+        TimeSpan RegexTimeout { get; set; } = TimeSpan.FromSeconds(5);
 
         public Receipt? ParseReceiptFromImageText(string receiptText, ReceiptParseModel model)
         {
@@ -44,13 +46,17 @@ namespace Shared.Service.ReceiptParser
             }
         }
 
+        //protected void ExtractReceiptItems()
+        //{
+
+        //}
         protected void ExtractReceiptLines()
         {
             if (!string.IsNullOrEmpty(ReceiptText) && !string.IsNullOrEmpty(ParseModel?.LineSeparatorPattern))
             {
                 ReceiptText = ReceiptText.Replace("\\n", "\n"); // Normalize the text
 
-                var regex = new Regex(ParseModel.LineSeparatorPattern);
+                var regex = new Regex(ParseModel.LineSeparatorPattern, RegexOptions.None, RegexTimeout);
                 ReceiptLines = regex.Split(ReceiptText)
                     .Where(line => !string.IsNullOrWhiteSpace(line)) // Ignore empty lines
                     .Select(line => line.Trim())
@@ -63,14 +69,14 @@ namespace Shared.Service.ReceiptParser
             string pattern = $@"{ParseModel.ItemLinePattern}";
             foreach (var line in ReceiptLines)
             {
-                var match = Regex.Match(line, pattern);
+                var regex = new Regex(pattern, RegexOptions.None, RegexTimeout);
+                var match = regex.Match(line);
                 if (match.Success)
                 {
                     ItemLines.Add(line);
                 }
             }
         }
-
 
         //Todo Finish and write test that asserts line above ecpression is included correctly in ItemLines
         protected void ExtractReceiptItemLineAbove()
@@ -87,7 +93,7 @@ namespace Shared.Service.ReceiptParser
                 {
                     foreach (var pattern in patterns)
                     {
-                        var regex = new Regex(pattern.Replace("//", "/"));
+                        var regex = new Regex(pattern.Replace("//", "/"), RegexOptions.None, RegexTimeout);
                         if (regex.IsMatch(ReceiptLines[i + 1]))
                         {
                             ItemLines.Add(line);
@@ -96,7 +102,6 @@ namespace Shared.Service.ReceiptParser
                 }
             }
         }
-
 
         protected void RemoveNonItemLines()
         {
@@ -107,7 +112,8 @@ namespace Shared.Service.ReceiptParser
                 for (var i = 0; i < ItemLines.Count - 1; i++)
                 {
                     var line = ItemLines[i];
-                    var match = Regex.Match(line, pattern);
+                    var regex = new Regex(pattern, RegexOptions.None, RegexTimeout);
+                    var match = regex.Match(line);
                     if (match.Success)
                     {
                         removeIndexes.Add(line);
@@ -123,7 +129,11 @@ namespace Shared.Service.ReceiptParser
         protected void ExtractReceiptItems()
         {
             //ToDO add logic to separate price, ammount and total
+            ExtractReceiptLines();
+            ExtractReceiptItemSingleLines();
             RemoveNonItemLines();
+            CombineAndInsertKeyBeforeValue();
+            CombineDualLines();
             foreach (string line in ItemLines)
             {
                 ExtractedReceipt.Items.Add(new Item() { Name = line });
@@ -138,8 +148,8 @@ namespace Shared.Service.ReceiptParser
             string pattern = $@"{ParseModel.StorePattern}";
             foreach (var line in ReceiptLines)
             {
-                var match = Regex.Match(line, pattern);
-
+                var regex = new Regex(pattern, RegexOptions.None, RegexTimeout);
+                var match = regex.Match(line);
                 if (match.Success)
                 {
                     ExtractedReceipt.StoreName = line;
@@ -153,7 +163,8 @@ namespace Shared.Service.ReceiptParser
             string pattern = $@"{ParseModel.PuchaseDatePattern}";
             foreach (var line in ReceiptLines)
             {
-                var match = Regex.Match(line, pattern);
+                var regex = new Regex(pattern, RegexOptions.None, RegexTimeout);
+                var match = regex.Match(line);
 
                 if (match.Success)
                 {
@@ -180,7 +191,7 @@ namespace Shared.Service.ReceiptParser
                 {
                     foreach (var pattern in patterns)
                     {
-                        var regex = new Regex(pattern.Replace("//", "/"));
+                        var regex = new Regex(pattern.Replace("//", "/"), RegexOptions.None, RegexTimeout);
                         if (regex.IsMatch(ItemLines[i + 1]))
                         {
 
@@ -193,7 +204,6 @@ namespace Shared.Service.ReceiptParser
             }
             ItemLines = combinedLines;
         }
-
         //
         /// <summary>
         /// Runs after ExtractReceiptLines, ExtractReceiptItemLines, RemoveNonItemLines
@@ -210,8 +220,8 @@ namespace Shared.Service.ReceiptParser
 
                 foreach (var rule in ParseModel.TriggersAtNextIndexInsertsBeforeOnCurrentIndex)
                 {
-                    var triggerRegex = new Regex(rule.Key);
-                    var insertRegex = new Regex(rule.Value);
+                    var triggerRegex = new Regex(rule.Key, RegexOptions.None, RegexTimeout);
+                    var insertRegex = new Regex(rule.Value, RegexOptions.None, RegexTimeout);
 
                     if (i + 1 < ItemLines.Count && triggerRegex.IsMatch(ItemLines[i + 1]))
                     {
@@ -226,6 +236,5 @@ namespace Shared.Service.ReceiptParser
             }
             ItemLines = updatedLines;
         }
-
     }
 }

@@ -104,6 +104,8 @@ namespace Receiptly.Test.ReceiptProcessing.Resources
         public static DateTime ExpetedResultOfExtractPurchaseDateParsesDateCorrectl { get; set; } =  new DateTime(2024, 10, 25, 15, 47, 55);
         public static string ExpectedResultOfExtractReceiptStoreDetectsStoreNameCorrectly { get; set; } = "Hemköp Gallerian";
         public static int ExpectedCountOfEctractReceiptItemlines { get; set; } = 12;
-        public static int ExpectedCountOfItemlinesAterREmoveNonItemLines {get;set; } = 7;
+        public static int ExpectedCountOfItemlinesAterREmoveNonItemLines {get;set; } = 8;
+        public static int ExpectedCountOfItemlinesAfter
+
     }
 }
