@@ -1,8 +1,8 @@
-﻿@using Shared.Enum.Components.Home
-
+﻿@using Shared.Enum.Components.Home;
+@inherits LayoutComponentBase
 <div class="page">
     <div class="sidebar">
-        <NavMenu OnNavigationAction="" />
+        <NavMenu OnNavigationAction="@HandleNavigationAction" />
     </div>
 
     <main>
@@ -16,7 +16,12 @@
     </main>
 </div>
 @code{
+    [Inject]
+    public SiteState State {get; set;}
     private NavigationAction currentMainNav {get; set;}
-    private async Task HandleNavigationAction()
-    {}
+    private async Task HandleNavigationAction(NavigationAction action)
+    {
+        State.NavEntry = action;
+        await State.NavEntryChanged.InvokeAsync();
+    }
 }

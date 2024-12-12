@@ -15,14 +15,7 @@ Welcome to your new app.
     public IReceiptService ReceiptMockService { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        var result = await DalService.GetAllReceiptsAsync(HttpClient);
-        if(result == null)
-        {
-            Console.WriteLine("Unable to seed Database");
-        }
-        else
-        {
-            Console.WriteLine("Database available");
-        }
+
+
     }
 }
