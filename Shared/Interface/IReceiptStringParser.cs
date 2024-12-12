@@ -1,4 +1,5 @@
 ﻿using Shared.Models;
+using Shared.Service.ReceiptParser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,10 @@ namespace Shared.Interface
 {
     public interface IReceiptStringParser
     {
-        Receipt? ParseReceiptFromImageText(string imageText);
+        public string ReceiptText { get; set; }
+        public List<string> ReceiptLines { get; set; }
+        public Receipt ExtractedReceipt { get; set; } 
+        public ReceiptParseModel ParseModel { get; set; }
+        Receipt? ParseReceiptFromImageText(string ReceiptText, ReceiptParseModel model);
     }
 }
