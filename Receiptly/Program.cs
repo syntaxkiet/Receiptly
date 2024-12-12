@@ -15,7 +15,6 @@ namespace Receiptly
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
             builder.Services.AddScoped<INotificationService, BrowserNotificationService>();
-            builder.Services.AddScoped<IExpiryCheckService, ExpiryCheckService>();
             builder.Services.AddScoped<IReceiptService, ReceiptMockingService>();
             builder.Services.AddScoped<IReceiptDalService, ReceiptDalService>();
             builder.Services.AddScoped<IItemService, ItemService>();

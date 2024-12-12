@@ -1,8 +1,7 @@
-
-using ReceiptlyAPI.Controllers;
 using Shared.Interface;
 using Shared.Models;
 using Shared.Service;
+using Shared.Service.Ocr.Tesseract;
 
 namespace ReceiptlyAPI
 {

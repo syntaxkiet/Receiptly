@@ -13,7 +13,6 @@ namespace Receiptly.Test
         [Fact]
         public async Task GetNotification_ReturnNotifications_WhenExpiredItemExists()
         {
-            
             // Arrange
             var receiptList = new List<Receipt>
             {

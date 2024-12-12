@@ -1,99 +1,66 @@
-@page "/NotificationSystemClient"
 @using Receiptly.Interface
 @inject INotificationService NotificationService
 @inject HttpClient Http
 
-<h3>Notifications</h3>
+<h3>Past Notifications</h3>
 
 <ul>
-    @foreach (var notification in Notifications)
+    @foreach (var notification in Shared.Models.MockNotificationHistory.Log)
     {
         <li>@((MarkupString)notification)</li>
     }
 </ul>
 
-<button @onclick="StartPolling" disabled="@IsPolling">Start Polling</button>
-<button @onclick="StopPolling" disabled="@(IsPolling == false)">Stop Polling</button>
-
-<p>@StatusMessage</p>
-
 @code {
-    private List<string> Notifications { get; set; } = new List<string>();
-    private bool IsPolling { get; set; } = false;
+    
     private CancellationTokenSource? CancellationTokenSource { get; set; }
-    private string StatusMessage { get; set; } = "Idle";
 
-    private async Task StartPolling()
+    protected override async Task OnInitializedAsync()
     {
-        if (IsPolling) return;
+        Console.WriteLine("Client initialized for polling.");
 
-        IsPolling = true;
-        StateHasChanged(); 
-
+        // Start polling and UI update
         CancellationTokenSource = new CancellationTokenSource();
-        Console.WriteLine("Polling started.");
-        StatusMessage = "Polling notifications...";
+        _ = PollNotificationsAsync();
+        _ = UpdateLabelPeriodicallyAsync();
+    }
 
+    private async Task PollNotificationsAsync()
+    {
         try
         {
             while (!CancellationTokenSource.Token.IsCancellationRequested)
             {
                 var response = await Http.GetAsync("api/notifications", CancellationTokenSource.Token);
-                Console.WriteLine($"Response StatusCode: {response.StatusCode}");
-
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var base64Message = await response.Content.ReadAsStringAsync(CancellationTokenSource.Token);
                     var decodedMessage = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(base64Message));
 
-                    Notifications.Add(decodedMessage);
+                    Shared.Models.MockNotificationHistory.Log.Add((DateTime.Now.ToString("MM/dd/yyyy HH:mm")) + " : " + decodedMessage);
                     await NotificationService.NotifyAsync(decodedMessage);
-                    StatusMessage = "Notification received.";
-                }
-                else if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                {
-                    StatusMessage = "No new notifications.";
-                }
-                else
-                {
-                    StatusMessage = $"Error: {response.StatusCode}";
-                    break; 
                 }
 
-                await Task.Delay(5000, CancellationTokenSource.Token);
+  
+                await Task.Delay(30000, CancellationTokenSource.Token);
             }
         }
         catch (OperationCanceledException)
         {
-            StatusMessage = "Polling stopped.";
+            Console.WriteLine("Polling stopped.");
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Error: {ex.Message}";
+            Console.WriteLine($"Error during polling: {ex.Message}");
         }
-        finally
+    }
+
+    private async Task UpdateLabelPeriodicallyAsync()
+    {
+        while (!CancellationTokenSource.Token.IsCancellationRequested)
         {
-            IsPolling = false;
-            Console.WriteLine("Polling stopped.");
             StateHasChanged(); 
+            await Task.Delay(10000, CancellationTokenSource.Token);
         }
     }
-
-    private void StopPolling()
-    {
-        if (!IsPolling) return;
-
-        CancellationTokenSource?.Cancel();
-        IsPolling = false; // Ensure IsPolling is reset
-        Console.WriteLine("Stopped the polling.");
-        StatusMessage = "Polling stopped.";
-        StateHasChanged(); 
-    }
-
-    protected override void OnInitialized()
-    {
-        Console.WriteLine("Client ready to poll.");
-        StatusMessage = "Ready to start polling.";
-    }
-
 }

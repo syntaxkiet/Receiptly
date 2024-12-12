@@ -20,8 +20,7 @@ namespace ReceiptlyAPI.Controllers
         public async Task<IActionResult> GetNotifications(CancellationToken cancellationToken)
         {
             var startTime = DateTime.Now;
-            
-            
+
             while (!cancellationToken.IsCancellationRequested)
             {
                 var now = DateTime.Now;
