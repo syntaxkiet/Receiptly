@@ -1,30 +1,16 @@
 ﻿
 
 <ReceiptDetailsForm Receipt="editReceipt" />
-
+<EditItems Items="editReceipt.Items"/>
+<button class="btn btn-success" @onclick="SaveReceipt">Spara kvitto</button>
 
 @code {
-    public Receipt editReceipt { get; set; }
+    [Parameter]
+    public Receipt editReceipt { get; set; } = new();
+    [Parameter]
+    public EventCallback OnSaveReceipt { get; set; }
     private async Task SaveReceipt()
     {
-        try
-        {
-            if (Logic.newReceipt.Id == 0)
-            {
-                // Skapa nytt kvitto
-                await ReceiptDalService.CreateReceiptsAsync(new List<Receipt> { Logic.newReceipt }, HttpClient);
-            }
-            else
-            {
-                // Uppdatera befintligt kvitto
-                await ReceiptDalService.UpdateReceiptsAsync(new List<Receipt> { Logic.newReceipt }, HttpClient);
-            }
-            Console.WriteLine("Kvitto sparat!");
-            Navigation.NavigateTo("/receipts");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Fel vid sparande av kvitto: {ex.Message}");
-        }
+        await OnSaveReceipt.InvokeAsync();
     }
 }

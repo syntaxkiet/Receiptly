@@ -1,10 +1,27 @@
 ﻿@page "/receiptupload"
-
-
-<ReceiptUploadComponent/>
-<ReceiptDetailsForm Receipt="scannedReceipt" />
+@if (UploadModeActive)
+{
+    <ReceiptUploadComponent OnSuccessfulUpload="HandleSuccessfulUpload"/>
+}
+else
+{
+    <AddReceiptComponent OnSaveReceipt="HandleSaveButtonPressed"/>
+}
 @code {
-    private Receipt scannedReceipt { get; set; }
-    private void HandleSuccessfulUpload();
-
+    [Inject]
+    public HttpClient client { get; set; } = new();
+    [Inject]
+    public required IReceiptDalService DalService { get; set; }
+    private Receipt scannedReceipt { get; set; } = new();
+    private bool UploadModeActive { get; set; } = true;
+    private void HandleSuccessfulUpload(Receipt uploadedReceipt)
+    {
+        scannedReceipt = uploadedReceipt;
+        UploadModeActive = false;
+    }
+    private async Task HandleSaveButtonPressed()
+    {
+        List<Receipt> receipts = new List<Receipt>() { scannedReceipt};
+        await DalService.CreateReceiptsAsync(receipts, client);
+    }
 }
