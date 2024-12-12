@@ -1,0 +1,30 @@
+﻿
+
+<ReceiptDetailsForm Receipt="editReceipt" />
+
+
+@code {
+    public Receipt editReceipt { get; set; }
+    private async Task SaveReceipt()
+    {
+        try
+        {
+            if (Logic.newReceipt.Id == 0)
+            {
+                // Skapa nytt kvitto
+                await ReceiptDalService.CreateReceiptsAsync(new List<Receipt> { Logic.newReceipt }, HttpClient);
+            }
+            else
+            {
+                // Uppdatera befintligt kvitto
+                await ReceiptDalService.UpdateReceiptsAsync(new List<Receipt> { Logic.newReceipt }, HttpClient);
+            }
+            Console.WriteLine("Kvitto sparat!");
+            Navigation.NavigateTo("/receipts");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fel vid sparande av kvitto: {ex.Message}");
+        }
+    }
+}

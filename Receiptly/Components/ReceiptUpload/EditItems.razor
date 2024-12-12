@@ -1,0 +1,39 @@
+﻿<div class="form-group">
+    <button class="btn btn-primary" @onclick="AddItem">Lägg till artikel</button>
+</div>
+
+<!-- Show and handle items -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Artikel</th>
+            <th>Kvantitet</th>
+            <th>Bäst före</th>
+            <th>Ta bort</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Items)
+        {
+            <ReceiptItem Item="item" OnRemove="RemoveItem" />
+        }
+    </tbody>
+</table>
+@code {
+    [Parameter]
+    [EditorRequired]
+    public List<Item> Items { get; set; } = new();
+    private void AddItem()
+    {
+        Items.Add(new Item());
+        StateHasChanged();
+    }
+
+    private void RemoveItem(Item removeItem)
+    {
+        Items.Remove(removeItem);
+        StateHasChanged();
+    }
+
+}

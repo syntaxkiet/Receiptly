@@ -5,51 +5,63 @@
 @inject NavigationManager Navigation
 @inject AddReceiptLogic Logic
 
-<h3>Hantera Kvitto</h3>
-<!-- Choose a receipt  -->
-<div class="form-group">
-    <label for="select-receipt">Välj kvitto/Skapa kvitto</label>
-    <select id="select-receipt" class="form-control" @onchange="LoadSelectedReceipt">
-        <option value="">Nytt kvitto </option>
-        @foreach (var receipt in ReceiptList)
-        {
-        <option value="@receipt.Id">@receipt.StoreName - @receipt.PurchaseDate.ToShortDateString()</option>
-        }
-    </select>
+
+<div class="container p-0 ms-0">
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <label for="select-receipt">Välj kvitto/Skapa kvitto</label>
+                <select id="select-receipt" class="form-control" @onchange="LoadSelectedReceipt">
+                    <option value="">Nytt kvitto </option>
+                    @foreach (var receipt in ReceiptList)
+                    {
+                        <option value="@receipt.Id">@receipt.StoreName - @receipt.PurchaseDate.ToShortDateString()</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-2 ms-3 align-self-end p-0">
+            <button class="btn btn-primary mb-0" @onclick="UploadReceipt">Ladda upp ett kvitto<InputFile></InputFile></button>
+        </div>
+    </div>
 </div>
 <ReceiptDetailsForm Receipt="Logic.newReceipt" />
 
 <!-- Form to add new items -->
-<div class="form-group" >
+<div class="form-group">
     <button class="btn btn-primary" @onclick="AddItem">Lägg till artikel</button>
 </div>
 
 <!-- Show and handle items -->
 <table class="table">
     <thead>
-    <tr>
-        <th>Artikel</th>
-        <th>Kvantitet</th>
-        <th>Bäst före</th>
-        <th>Ta bort</th>
-    </tr>
+        <tr>
+            <th>Artikel</th>
+            <th>Kvantitet</th>
+            <th>Bäst före</th>
+            <th>Ta bort</th>
+        </tr>
     </thead>
 
     <tbody>
-    @foreach (var item in Logic.newReceipt.Items)
-    {
-        <ReceiptItem Item="item" OnRemove="RemoveItem"/>
-    }
+        @foreach (var item in Logic.newReceipt.Items)
+        {
+            <ReceiptItem Item="item" OnRemove="RemoveItem" />
+        }
     </tbody>
 </table>
 
 <!-- Save receipt-->
 <button class="btn btn-success" @onclick="SaveReceipt">Spara kvitto</button>
-
+@if(uploadFileModeActive)
+{
+    <FileUpload OnFileUploaded="HandleUploadedReceipt" />
+}
 
 
 @code {
-
+    private IBrowserFile? uploadedFile { get; set; }
+    private bool uploadFileModeActive { get; set; } = false;
     private List<Receipt> ReceiptList { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
@@ -88,6 +100,7 @@
             Logic.newReceipt = new Receipt();
         }
     }
+
     private async Task SaveReceipt()
     {
         try
@@ -112,15 +125,24 @@
     }
 
     private void AddItem()
-        {
-            
-            Logic.AddItem();
-        }
+    {
 
-        private void RemoveItem(Item item)
-        {
-           
-            Logic.RemoveItem(item);
-        }
+        Logic.AddItem();
+    }
 
+    private void RemoveItem(Item item)
+    {
+
+        Logic.RemoveItem(item);
+    }
+
+    private void UploadReceipt()
+    {
+        uploadFileModeActive = true;
+        StateHasChanged();
+    }
+    private void HandleUploadedReceipt(IBrowserFile uploadedFile)
+    {
+  
+    }
 }
