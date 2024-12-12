@@ -105,7 +105,6 @@ namespace Receiptly.Test.ReceiptProcessing.Resources
         public static string ExpectedResultOfExtractReceiptStoreDetectsStoreNameCorrectly { get; set; } = "Hemköp Gallerian";
         public static int ExpectedCountOfEctractReceiptItemlines { get; set; } = 12;
         public static int ExpectedCountOfItemlinesAterREmoveNonItemLines {get;set; } = 8;
-        public static int ExpectedCountOfItemlinesAfter
 
     }
 }
