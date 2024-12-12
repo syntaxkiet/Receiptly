@@ -19,5 +19,6 @@ namespace Shared.Service.ReceiptParser
         public List<string> ExcludeLineFromItems {get; set;} = new();
         //Key pattern will grab any next line that matches and insert before value pattern on the current line
         public Dictionary<string,string> TriggersAtNextIndexInsertsBeforeOnCurrentIndex {get; set;}
+        public List<string> ExtractReceiptItemLineAboveExpressions { get; set; } = new();
     }
 }

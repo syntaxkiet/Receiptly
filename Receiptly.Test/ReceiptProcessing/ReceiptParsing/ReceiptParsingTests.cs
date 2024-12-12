@@ -11,7 +11,7 @@ namespace Receiptly.Test.ReceiptProcessing.Tests
     public class TestableReceiptParser : ReceiptParser
     {
         public new void ExtractReceiptLines() => base.ExtractReceiptLines();
-        public new void ExtractReceiptItemLines() => base.ExtractReceiptItemLines();
+        public new void ExtractReceiptItemLines() => base.ExtractReceiptItemSingleLines();
         public new void ExtractPurchaseDate() => base.ExtractPurchaseDate();
         public new void CombineDualLines() => base.CombineDualLines();
         public new void CombineAndInsertKeyBeforeValue() => base.CombineAndInsertKeyBeforeValue();
@@ -160,6 +160,8 @@ namespace Receiptly.Test.ReceiptProcessing.Tests
             parser.ParseModel = ReceiptProcessingTestResourceHelper.TestModel;
             parser.ReceiptText = ReceiptProcessingTestResourceHelper.OcrResultOfReceiptSample1;
             parser.ExtractReceiptLines();
+            parser.ExtractReceiptItemLines();
+            parser.RemoveNonItemLines();
 
             // Act
 

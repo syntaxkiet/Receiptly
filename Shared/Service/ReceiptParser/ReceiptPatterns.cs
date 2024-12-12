@@ -14,15 +14,16 @@ namespace Shared.Service.ReceiptParser
     {
         public static ReceiptParseModel TestModel { get; } = new ReceiptParseModel()
         {
-            Name = "Hemköp Kungsgatan Eskilstuna",
-            ItemLinePattern = @"(?<Name>.+?)\s+\d{1,3}(?:[,.]\d{2})\s*(kr|)?$",
-            StorePattern = "Hemköp",
-            LineSeparatorPattern = @"\n", 
+            Name = "Hemköp",
+            ItemLinePattern = @"\b\d{1,4},\d{2}$",
+            StorePattern = @"Hemköp",
+            LineSeparatorPattern = @"\n",
             PuchaseDatePattern = @"(?<PurchaseDate>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})",
-            DualLinePatterns = new List<string>(){@"\+PANT", @"\d{1,3}[,]\d{2}/kg", @"\d{1,3},\s?\d{2}kr/\w{1,3}" },
-            ExcludeLineFromItems = new List<string>(){}
-                    
+            DualLinePatterns = new List<string>() { @"\+PANT", @"\d{1,3}[,]\d{2}/kg", @"\d{1,3},\s?\d{2}kr/\w{1,3}" },
+            TriggersAtNextIndexInsertsBeforeOnCurrentIndex = new() { { @"(?i)\+PANT(?!\S)", @"\b\d{1,4},\d{2}$" } },
+            ExcludeLineFromItems = new List<string>() {@"(?i)\b bonusgrundande\b", @"(?i)\bkontokort\b", @"(?i)\bpoänggrundande\b"}
         };
+
         public static List<ReceiptParseModel> ParseModels { get; set; } = new()
         {
             new ReceiptParseModel()
