@@ -1,5 +1,7 @@
 @page "/AddReceipt"
-@inject IReceiptService ReceiptService
+@using System.Net
+@inject IReceiptDalService ReceiptDalService
+@inject HttpClient HttpClient
 @inject NavigationManager Navigation
 @inject AddReceiptLogic Logic
 
@@ -50,18 +52,36 @@
 
     private List<Receipt> ReceiptList { get; set; } = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        // Get the Mockdata
-        ReceiptList = ReceiptService.GetAllReceipts();
-
+        try
+        {
+            // HGets list via ReceiptDalService
+            var receipts = await ReceiptDalService.GetAllReceiptsAsync(HttpClient);
+            ReceiptList = receipts ?? new List<Receipt>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ett fel inträffade vid hämtning av kvitton: {ex.Message}");
+        }
     }
 
-    private void LoadSelectedReceipt(ChangeEventArgs e)
+    private async Task LoadSelectedReceipt(ChangeEventArgs e)
     {
         if (int.TryParse(e.Value?.ToString(), out var receiptId) && receiptId > 0)
         {
-             Logic.LoadReceipt(receiptId);
+            try
+            {
+                var receipt = await ReceiptDalService.GetReceiptByIdAsync(receiptId, HttpClient);
+                if (receipt != null)
+                {
+                    Logic.LoadReceipt(receiptId);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ett fel inträffade vid laddning av kvitto: {ex.Message}");
+            }
         }
         else
         {
@@ -70,22 +90,24 @@
     }
     private async Task SaveReceipt()
     {
-        // Kontrollera att varje artikel har en giltig kvantitet
-        if (Logic.newReceipt.Items.Any(item => item.Quantity < 1))
-        {
-            Console.WriteLine("Alla artiklar måste ha en kvantitet större än eller lika med 1.");
-            return;
-        }
-
         try
         {
-            await Logic.SaveReceiptAsync();
+            if (Logic.newReceipt.Id == 0)
+            {
+                // Skapa nytt kvitto
+                await ReceiptDalService.CreateReceiptsAsync(new List<Receipt> { Logic.newReceipt }, HttpClient);
+            }
+            else
+            {
+                // Uppdatera befintligt kvitto
+                await ReceiptDalService.UpdateReceiptsAsync(new List<Receipt> { Logic.newReceipt }, HttpClient);
+            }
             Console.WriteLine("Kvitto sparat!");
             Navigation.NavigateTo("/receipts");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ett fel inträffade: {ex.Message}");
+            Console.WriteLine($"Fel vid sparande av kvitto: {ex.Message}");
         }
     }
 
