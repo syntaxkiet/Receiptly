@@ -9,7 +9,14 @@
     </td>
     <td>
         <input type="number" @bind=Item.Quantity
-               class="form-control" min="1"/>
+               class="form-control @(Item.Quantity <= 0 ? "is-invalid" : "")"
+               min="1" />
+        @if (Item.Quantity <= 0)
+        {
+        <div class="invalid-feedback">
+            Kvantiteten måste vara minst 1.
+        </div>
+        }
     </td>
     <td>
         <input type="date" @bind=Item.BestBeforeDate class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd")"/>
