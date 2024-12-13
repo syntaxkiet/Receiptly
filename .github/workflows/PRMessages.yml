@@ -1,0 +1,39 @@
+name: Post Commit Messages to PR
+
+on:
+  pull_request:
+    types: [synchronize, opened, reopened]
+
+jobs:
+  post-commit-messages:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Fetch commit messages
+        id: get_commits
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: commits } = await github.rest.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+
+            const commitMessages = commits.map(commit => `- ${commit.commit.message}`).join('\n');
+            core.setOutput("commitMessages", commitMessages);
+
+      - name: Post commit messages as a comment
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const commentBody = `### Commit Messages in this Pull Request:\n${steps.get_commits.outputs.commitMessages}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: commentBody,
+            });
