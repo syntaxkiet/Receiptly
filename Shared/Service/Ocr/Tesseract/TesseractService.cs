@@ -37,7 +37,6 @@ namespace Shared.Service.Ocr.Tesseract
                 // Perform OCR
                 using var page = engine.Process(pix);
                 string extractedText = page.GetText();
-                extractedText = NormalizeLineBreaks(extractedText);
                 return extractedText;
             }
             catch (TesseractException tessEx)

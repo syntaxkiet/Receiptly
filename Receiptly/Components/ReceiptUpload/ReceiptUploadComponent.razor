@@ -1,0 +1,74 @@
+﻿@using System.Text
+@using System.Text.Json
+
+@if(displayUploadUi)
+{
+    <h3>KvittoUppladdning</h3>
+    <FileUpload ComponentTitle="Välj ett kvitto" ButtonTitle="Ladda upp kvitto" OnFileUploaded="HandleUploadedReceipt" />
+}
+else
+{
+    @if(displayFailMessage)
+    {
+        <h3>Uppladdningen misslyckades</h3>
+        <h3>återvänder...</h3>
+    }
+    else
+    {
+        <h3>Kvittouppladdning pågår...</h3>
+    }
+}
+@code {
+    [Inject]
+    HttpClient Client { get; set; } = new();
+    [Parameter]
+    public EventCallback<Receipt> OnSuccessfulUpload { get; set; }
+    private bool displayUploadUi { get; set; } = true;
+    private bool displayFailMessage { get; set; } = false;
+    public async Task HandleUploadedReceipt(IBrowserFile selectedFile)
+    {
+        displayUploadUi = false;
+        StateHasChanged();
+        try
+        {
+            // Read the file as a stream
+            await using var stream = selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB limit
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+
+            // Convert the file data to Base64
+            var base64String = Convert.ToBase64String(memoryStream.ToArray());
+
+            // Create the payload
+            var payload = new { FileName = selectedFile.Name, FileContent = base64String, ContentType = selectedFile.ContentType };
+
+            // Serialize payload to JSON
+            var jsonPayload = JsonSerializer.Serialize(payload);
+
+            // Send the JSON payload to the server
+            var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync("ocr/extractreceiptdata", httpContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var extracted = await JsonHelper.SafeExtractReceiptFromJson(response.Content);
+                if(extracted is Receipt)
+                {
+                    await OnSuccessfulUpload.InvokeAsync(extracted);
+                }
+            }
+            else
+            {
+                displayFailMessage = true;
+                StateHasChanged();
+                Thread.Sleep(300);
+                displayUploadUi = true;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during file upload: {ex.Message}");
+        }
+    }
+}

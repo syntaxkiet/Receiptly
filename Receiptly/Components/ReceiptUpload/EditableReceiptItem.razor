@@ -1,0 +1,43 @@
+@using System.Drawing.Imaging
+
+
+
+<tr>
+    <td>
+        <input type="text" @bind="Item.Name"
+               class="form-control" placeholder="Artikelnamn"/>
+    </td>
+    <td>
+        <input type="number" @bind=Item.Quantity
+               class="form-control"
+               min="1" />
+        @if (Item.Quantity <= 0)
+        {
+        <div class="invalid-feedback">
+            Kvantiteten måste vara minst 1.
+        </div>
+        }
+    </td>
+    <td>
+        <input type="date" @bind=Item.BestBeforeDate class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd")"/>
+    </td>
+    <td>
+        <button type="button" @onclick="RemoveItem"
+                class="btn btn-danger">Ta bort</button>
+    </td>
+</tr>
+@code {
+    [Parameter] 
+    public Item Item { get; set; } = new();
+    
+    [Parameter]
+    public EventCallback<Item> OnRemove { get; set; }
+
+    private async Task RemoveItem()
+    {
+        if (OnRemove.HasDelegate)
+        {
+            await OnRemove.InvokeAsync(Item);
+        }
+    }
+}

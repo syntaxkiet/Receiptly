@@ -11,33 +11,33 @@
         <option value="">Nytt kvitto </option>
         @foreach (var receipt in ReceiptList)
         {
-        <option value="@receipt.Id">@receipt.StoreName - @receipt.PurchaseDate.ToShortDateString()</option>
+            <option value="@receipt.Id">@receipt.StoreName - @receipt.PurchaseDate.ToShortDateString()</option>
         }
     </select>
 </div>
 <ReceiptDetailsForm Receipt="Logic.newReceipt" />
 
 <!-- Form to add new items -->
-<div class="form-group" >
+<div class="form-group">
     <button class="btn btn-primary" @onclick="AddItem">Lägg till artikel</button>
 </div>
 
 <!-- Show and handle items -->
 <table class="table">
     <thead>
-    <tr>
-        <th>Artikel</th>
-        <th>Kvantitet</th>
-        <th>Bäst före</th>
-        <th>Ta bort</th>
-    </tr>
+        <tr>
+            <th>Artikel</th>
+            <th>Kvantitet</th>
+            <th>Bäst före</th>
+            <th>Ta bort</th>
+        </tr>
     </thead>
 
     <tbody>
-    @foreach (var item in Logic.newReceipt.Items)
-    {
-        <ReceiptItem Item="item" OnRemove="RemoveItem"/>
-    }
+        @foreach (var item in Logic.newReceipt.Items)
+        {
+            <ReceiptItem Item="item" OnRemove="RemoveItem" />
+        }
     </tbody>
 </table>
 
@@ -61,7 +61,7 @@
     {
         if (int.TryParse(e.Value?.ToString(), out var receiptId) && receiptId > 0)
         {
-             Logic.LoadReceipt(receiptId);
+            Logic.LoadReceipt(receiptId);
         }
         else
         {
@@ -90,15 +90,16 @@
     }
 
     private void AddItem()
-        {
-            
-            Logic.AddItem();
-        }
+    {
 
-        private void RemoveItem(Item item)
-        {
-           
-            Logic.RemoveItem(item);
-        }
+        Logic.AddItem();
+    }
+
+    private void RemoveItem(Item item)
+    {
+
+        Logic.RemoveItem(item);
+    }
+
 
 }

@@ -1,0 +1,14 @@
+﻿<ReceiptDetailsForm Receipt="editReceipt" />
+<EditItems Items="editReceipt.Items"/>
+<button class="btn btn-success" @onclick="SaveReceipt">Spara kvitto</button>
+
+@code {
+    [Parameter]
+    public Receipt editReceipt { get; set; } = new();
+    [Parameter]
+    public EventCallback OnSaveReceipt { get; set; }
+    private async Task SaveReceipt()
+    {
+        await OnSaveReceipt.InvokeAsync();
+    }
+}
