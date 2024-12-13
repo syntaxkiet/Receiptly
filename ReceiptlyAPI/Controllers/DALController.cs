@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReceiptlyAPI.Services;
+using Shared.DTO;
 using Shared.Models;
 using System.Text.Json;
 
@@ -44,6 +45,12 @@ public class DALController : Controller
 
     [HttpPost("createorupdatereceipt")]
     public async Task<ActionResult> CreateOrUpdateReceipt([FromBody] JsonElement jsonElement)
+    {
+        return Ok(new { message = "Receipts have been created/updated successfully." });
+    }
+
+    [HttpPost("savereceipt")]
+    public async Task<ActionResult> SaveReceipt(ReceiptApiDto dto)
     {
         return Ok(new { message = "Receipts have been created/updated successfully." });
     }

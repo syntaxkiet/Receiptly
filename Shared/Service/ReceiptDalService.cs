@@ -1,4 +1,5 @@
-﻿using Shared.Interface;
+﻿using Shared.DTO;
+using Shared.Interface;
 using Shared.Models;
 using System.Net.Http.Json;
 using System.Text;
@@ -71,6 +72,12 @@ namespace Shared.Service
         public async Task UpdateReceiptsAsync(List<Receipt> receipts, HttpClient http)
         {
             await http.PostAsJsonAsync($"dal/createorupdatereceipts", receipts);
+        }
+
+        public async Task SaveReceiptAsync(Receipt receipt, HttpClient http)
+        {
+            var receiptDto = ReceiptApiDtoHelper.ConvertReceiptToDto(receipt);
+            var result = await http.PostAsJsonAsync($"dal/savereceipt", receiptDto);
         }
     }
 }
