@@ -4,6 +4,7 @@ using Receiptly.Interface;
 using Receiptly.Service;
 using Shared.Interface;
 using Shared.Service;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Receiptly
 {

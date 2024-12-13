@@ -5,7 +5,7 @@
 <h3>Past Notifications</h3>
 
 <ul>
-    @foreach (var notification in Shared.Models.MockNotificationHistory.Log)
+    @foreach (var notification in Shared.Cache.Local.NotificationHistory)
     {
         <li>@((MarkupString)notification)</li>
     }
@@ -37,7 +37,7 @@
                     var base64Message = await response.Content.ReadAsStringAsync(CancellationTokenSource.Token);
                     var decodedMessage = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(base64Message));
 
-                    Shared.Models.MockNotificationHistory.Log.Add((DateTime.Now.ToString("MM/dd/yyyy HH:mm")) + " : " + decodedMessage);
+                    Shared.Cache.Local.NotificationHistory.Add((DateTime.Now.ToString("MM/dd/yyyy HH:mm")) + " : " + decodedMessage);
                     await NotificationService.NotifyAsync(decodedMessage);
                 }
 

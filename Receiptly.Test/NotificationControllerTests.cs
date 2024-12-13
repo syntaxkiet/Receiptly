@@ -14,6 +14,7 @@ namespace Receiptly.Test
         public async Task GetNotification_ReturnNotifications_WhenExpiredItemExists()
         {
             // Arrange
+            var mockReceiptService = new Mock<IReceiptDalService>();
             var receiptList = new List<Receipt>
             {
                 new Receipt
@@ -25,7 +26,7 @@ namespace Receiptly.Test
                     }
                 }
             };
-
+        
             _controller = new NotificationsController(receiptList);
 
             // Act

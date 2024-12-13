@@ -23,6 +23,8 @@
         else
         {
             Console.WriteLine("Database available");
+            Shared.Cache.Local.LocalRecipeList = result;
         }
+
     }
 }
