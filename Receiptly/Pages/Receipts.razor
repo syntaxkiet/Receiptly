@@ -1,6 +1,5 @@
-﻿@page "/Receipts"
-@inject IReceiptDalService ReceiptDalService
-@inject HttpClient HttpClient
+﻿@page "/receipts"
+@inject IReceiptService ReceiptService
 @inject NavigationManager Navigation
 <h3>Alla kvitton</h3>
 
@@ -25,18 +24,11 @@ else
 @code {
     private List<Receipt> ReceiptList { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        try
-        {
-            // Hämta kvitton asynkront via ReceiptDalService
-            ReceiptList = await ReceiptDalService.GetAllReceiptsAsync(HttpClient);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error loading receipts: {ex.Message}");
-            ReceiptList = new List<Receipt>(); // Tom lista vid fel
-        }
+        // Get the Mockdata
+        ReceiptList = ReceiptService.GetAllReceipts();
+
     }
 
     private void OpenReceipt(int id)

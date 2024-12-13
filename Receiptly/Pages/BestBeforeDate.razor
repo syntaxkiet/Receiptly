@@ -1,7 +1,6 @@
 ﻿@page "/receipt/{id:int}"
 @inject NavigationManager Navigation
-@inject IReceiptDalService ReceiptDalService
-@inject HttpClient HttpClient
+@inject IReceiptService ReceiptService
 @inject IItemService ItemService
 <h3>Kvittodetaljer</h3>
 
@@ -50,20 +49,13 @@ else
 
     private Receipt? receipt;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        try
-        {
-            // Get receipt based on Id
-            receipt = await ReceiptDalService.GetReceiptByIdAsync( Id, HttpClient);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Ett fel inträffade: {ex.Message}");
-        }
+        // Get receipt based on Id
+        receipt = ReceiptService.GetReceiptById(Id);
+
     }
 
-    
     private void SaveBestBeforeDate(Item item)
     {
         try
