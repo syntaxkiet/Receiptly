@@ -1,5 +1,8 @@
 using System.Runtime.InteropServices.JavaScript;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Interface;
+using Shared.Models;
+using Shared.Service;
 
 namespace ReceiptlyAPI.Controllers
 {
@@ -7,25 +10,25 @@ namespace ReceiptlyAPI.Controllers
     [Route("api/notifications")]
     public class NotificationsController : ControllerBase
     {
-        private List<Shared.Models.Receipt> receiptList;
-
-        public NotificationsController()
+        private List<Receipt> _receiptList;
+        
+        public NotificationsController(List<Receipt> receiptList)
         {
-            receiptList = Shared.Models.MockData.receiptList;
+            _receiptList = receiptList;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetNotifications(CancellationToken cancellationToken)
         {
+
             var startTime = DateTime.Now;
-            
-            
+
             while (!cancellationToken.IsCancellationRequested)
             {
                 var now = DateTime.Now;
                 var notifications = new List<string>();
 
-                foreach (var receipt in receiptList)
+                foreach (var receipt in _receiptList)
                 {
                     foreach (var item in receipt.Items)
                     {

@@ -1,14 +1,10 @@
-
 using Shared.Interface;
 using Shared.Service.ReceiptParser;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Sqlite;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using ReceiptlyAPI.Data;
-using Shared.Models;
 using Receiptly;
 using ReceiptlyAPI.Services;
+using Shared.Service;
 using Shared.Service.Ocr.Tesseract;
 namespace ReceiptlyAPI
 {
@@ -19,6 +15,9 @@ namespace ReceiptlyAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped<IReceiptService, ReceiptMockingService>();
+            builder.Services.AddScoped<IReceiptDalService, ReceiptDalService>();
+            builder.Services.AddSingleton(Shared.Cache.Local.LocalRecipeList);
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
             builder.Services.AddDbContext<ReceiptlyDbContext>();
@@ -71,7 +70,6 @@ namespace ReceiptlyAPI
                 var context = scope.ServiceProvider.GetRequiredService<ReceiptlyDbContext>();
                 context.Database.Migrate();
             }
-
 
             app.Run();
         }
