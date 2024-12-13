@@ -18,8 +18,6 @@
     protected override async Task OnInitializedAsync()
     {
         Console.WriteLine("Client initialized for polling.");
-
-        // Start polling and UI update
         CancellationTokenSource = new CancellationTokenSource();
         _ = PollNotificationsAsync();
         _ = UpdateLabelPeriodicallyAsync();
