@@ -1,6 +1,6 @@
 using Shared.Models;
 
-namespace Shared.Interface
+namespace Receiptly.Interface
 {
     public interface ILocalReceiptService
     {

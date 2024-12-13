@@ -1,7 +1,8 @@
+using Receiptly.Interface;
 using Shared.Interface;
 using Shared.Models;
 
-namespace Shared.Service
+namespace Receiptly.Service
 {
     public class LocalReceiptService : ILocalReceiptService
     {
@@ -41,7 +42,7 @@ namespace Shared.Service
         public async Task CreateReceiptsAsync(List<Receipt> receipts)
         {
             await _receiptDalService.CreateReceiptsAsync(receipts, _httpClient);
-            _cachedReceipts = null; // Invalidate cache to refresh next time
+            _cachedReceipts = null; //Invalidate cache
         }
 
         public async Task DeleteReceiptByIdAsync(int id)
@@ -53,7 +54,7 @@ namespace Shared.Service
         public async Task UpdateReceiptsAsync(List<Receipt> receipts)
         {
             await _receiptDalService.UpdateReceiptsAsync(receipts, _httpClient);
-            _cachedReceipts = null; // Invalidate cache to refresh next time
+            _cachedReceipts = null; 
         }
     }
 }
