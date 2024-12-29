@@ -1,12 +1,12 @@
 ﻿using Shared.Interface;
 using Shared.Models;
-
 namespace Shared.Service;
 
-public class ReceiptMockingService :IReceiptService
+public class ReceiptMockingService : IReceiptService
 {
+    
     public List<Receipt> GetAllReceipts()
-        {
+    {
         // Return mock data for now
         return MockData.receiptList;
     }
@@ -15,7 +15,7 @@ public class ReceiptMockingService :IReceiptService
         // Fetch receipt by ID
         return MockData.receiptList.FirstOrDefault(r => r.Id == id);
     }
-    
+
 
     public async Task SaveReceiptAsync(Receipt receipt)
     {
@@ -27,7 +27,9 @@ public class ReceiptMockingService :IReceiptService
         // Spara kvittot (simulerat här)
         await Task.Delay(100); // Simulera API-anrop
         Console.WriteLine("Kvitto sparat i databasen!");
-        
+
         MockData.receiptList.Add(receipt);
     }
+
 }
+

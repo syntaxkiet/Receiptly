@@ -17,6 +17,8 @@ namespace ReceiptlyAPI
             // Add services to the container.
             builder.Services.AddScoped<IReceiptService, ReceiptMockingService>();
             builder.Services.AddScoped<IReceiptDalService, ReceiptDalService>();
+            builder.Services.AddScoped<IReceiptService, ReceiptService>();
+            builder.Services.AddHttpClient();
             builder.Services.AddSingleton(Shared.Cache.Local.LocalRecipeList);
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
